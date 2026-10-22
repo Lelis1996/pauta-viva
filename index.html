@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pauta Viva</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one-screen app — header, a large staff "music desk" card, and a piano keyboard docked at the bottom */
+:root{
+  --bg:#EEF1F5; --surface:#FFFFFF; --surface-2:#F6F8FB; --ink:#18202C; --muted:#5A6476; --line:#D5DBE4;
+  --accent:#8E2436; --accent-soft:rgba(142,36,54,.10); --on-accent:#FFFFFF;
+  --ok:#23784A; --ok-soft:rgba(35,120,74,.12); --bad:#C0392B; --bad-soft:rgba(192,57,43,.12);
+  --star:#C98A12; --key-white:#FBFCFD; --key-black:#1C222B; --key-edge:#BAC2CE;
+  --font-display:"Young Serif", Georgia, "Times New Roman", serif;
+  --font-body:"Figtree", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F131A; --surface:#181E27; --surface-2:#1F2631; --ink:#E7EBF1; --muted:#9AA4B4; --line:#2D3542;
+  --accent:#E07A88; --accent-soft:rgba(224,122,136,.14); --on-accent:#1A0E11;
+  --ok:#5BC18B; --ok-soft:rgba(91,193,139,.14); --bad:#F2786C; --bad-soft:rgba(242,120,108,.14);
+  --star:#F0B640; --key-white:#E9EDF2; --key-black:#0A0D12; --key-edge:#55606F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F131A; --surface:#181E27; --surface-2:#1F2631; --ink:#E7EBF1; --muted:#9AA4B4; --line:#2D3542;
+  --accent:#E07A88; --accent-soft:rgba(224,122,136,.14); --on-accent:#1A0E11;
+  --ok:#5BC18B; --ok-soft:rgba(91,193,139,.14); --bad:#F2786C; --bad-soft:rgba(242,120,108,.14);
+  --star:#F0B640; --key-white:#E9EDF2; --key-black:#0A0D12; --key-edge:#55606F; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.45;
+  -webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app{height:100%;display:flex;flex-direction:column;max-width:1180px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px}
+.screen{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px}
+
+/* header */
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-height:48px}
+.brand{font-family:var(--font-display);font-size:1.5rem;letter-spacing:.2px;display:flex;align-items:center;gap:10px}
+.brand svg{width:30px;height:30px}
+.spacer{flex:1}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:var(--surface);
+  border:1px solid var(--line);font-size:.86rem;color:var(--muted);max-width:100%}
+.chip .dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
+.chip.on .dot{background:var(--ok);box-shadow:0 0 0 4px var(--ok-soft)}
+.chip.on{color:var(--ink)}
+.chip.flash .dot{background:var(--accent);box-shadow:0 0 0 5px var(--accent-soft)}
+.chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.iconbtn{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);
+  background:var(--surface)}
+.iconbtn svg{width:22px;height:22px}
+
+/* home */
+.home{overflow:auto;padding-bottom:8px}
+.intro{display:flex;flex-direction:column;gap:4px}
+.intro h1{font-family:var(--font-display);font-weight:400;font-size:clamp(1.6rem,3.4vw,2.3rem);margin:0;text-wrap:balance}
+.intro p{margin:0;color:var(--muted);max-width:62ch}
+.groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:700px){.groups{grid-template-columns:minmax(0,1fr)}}
+.drill .sub span{white-space:nowrap}
+.group{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.group-head{display:flex;align-items:center;gap:12px}
+.group-head .clefmark{width:46px;height:58px;flex:none}
+.group-head h2{margin:0;font-family:var(--font-display);font-weight:400;font-size:1.3rem}
+.group-head small{display:block;color:var(--muted);font-size:.85rem}
+.drill{display:grid;grid-template-columns:96px 1fr auto;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;
+  border:1px solid var(--line);background:var(--surface-2);text-align:left;width:100%}
+.drill:hover{border-color:var(--accent)}
+.drill .mini{width:96px;height:44px}
+.drill b{display:block;font-weight:600}
+.drill .sub{color:var(--muted);font-size:.85rem}
+.stars{display:inline-flex;gap:2px;color:var(--line)}
+.stars svg{width:16px;height:16px}
+.stars .f{color:var(--star)}
+.midi-test{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+  display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.midi-test h3{margin:0;font-size:1rem}
+.midi-test p{margin:0;color:var(--muted);font-size:.9rem;max-width:60ch}
+.lastkey{font-family:var(--font-display);font-size:1.4rem;min-width:7ch}
+
+/* drill */
+.drillbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.drillbar h2{margin:0;font-family:var(--font-display);font-weight:400;font-size:1.25rem;min-width:0}
+.stat{font-variant-numeric:tabular-nums;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:.9rem}
+.bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+.desk{position:relative;flex:1;min-height:200px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+#staff{width:100%;display:flex;justify-content:center}
+#staff svg{display:block;max-width:100%;height:auto}
+#staff.slide svg{animation:slide .22s ease-out}
+@keyframes slide{from{transform:translateX(var(--slide,60px))}to{transform:none}}
+#staff.shake svg{animation:shake .32s ease}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
+.feedback{min-height:1.6em;font-weight:600;text-align:center;padding:0 12px 14px;font-size:1.05rem}
+.feedback.ok{color:var(--ok)} .feedback.bad{color:var(--bad)} .feedback.info{color:var(--muted);font-weight:500}
+.startcard{position:absolute;inset:0;display:grid;place-items:center;overflow:auto;background:var(--surface)}
+.startcard>div{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:16px;max-width:46ch}
+.startcard p{margin:0;color:var(--muted)}
+.startcard>div{max-width:620px!important;width:100%}
+.levelseg{width:100%;max-width:440px;background:var(--surface)}
+.preview{width:100%;display:flex;justify-content:center}
+.preview svg{max-width:100%;height:auto}
+.groups .group:last-child:nth-child(odd){grid-column:1/-1}
+.btn{border:0;border-radius:12px;padding:12px 22px;font-weight:600;background:var(--accent);color:var(--on-accent);min-height:46px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:active{transform:translateY(1px)}
+
+/* keyboard */
+.kbwrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px 10px 12px}
+.kb{position:relative;display:flex;height:clamp(110px,22vh,190px);user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.wk{flex:1;position:relative;background:var(--key-white);border:1px solid var(--key-edge);border-top:0;border-radius:0 0 8px 8px;
+  margin-right:-1px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font-size:.78rem;color:#6B7483;font-weight:600}
+.bk{position:absolute;top:0;height:60%;background:var(--key-black);border-radius:0 0 6px 6px;z-index:2;border:1px solid #000}
+.wk.down{background:color-mix(in srgb,var(--accent) 30%,var(--key-white))}
+.bk.down{background:color-mix(in srgb,var(--accent) 55%,var(--key-black))}
+.wk.okflash{background:color-mix(in srgb,var(--ok) 40%,var(--key-white))}
+.wk.badflash,.bk.badflash{background:color-mix(in srgb,var(--bad) 45%,var(--key-white))}
+.wk.c-mark{color:var(--ink)}
+.namepad{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.namepad button{min-height:64px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);font-family:var(--font-display);font-size:1.3rem}
+.namepad button.okflash{background:var(--ok-soft);border-color:var(--ok)}
+.namepad button.badflash{background:var(--bad-soft);border-color:var(--bad)}
+
+/* results */
+.results{flex:1;display:grid;place-items:center;overflow:auto}
+.rcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;max-width:560px;width:100%;
+  display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center}
+.rcard h2{margin:0;font-family:var(--font-display);font-weight:400;font-size:1.7rem;text-wrap:balance}
+.bigstars{display:flex;gap:6px;color:var(--line)}
+.bigstars svg{width:40px;height:40px}
+.bigstars .f{color:var(--star);animation:pop .35s ease backwards}
+@keyframes pop{from{transform:scale(.4);opacity:0}}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+.nums div{background:var(--surface-2);border-radius:12px;padding:10px}
+.nums b{display:block;font-size:1.4rem;font-variant-numeric:tabular-nums}
+.nums span{color:var(--muted);font-size:.82rem}
+.rule{color:var(--muted);font-size:.85rem;margin:0}
+.missed{margin:0;font-size:.95rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* settings sheet */
+.sheet{position:fixed;inset:0;background:rgba(10,14,20,.45);display:grid;place-items:center;z-index:20;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);width:100%;max-width:520px;max-height:100%;overflow:auto;
+  padding:20px;display:flex;flex-direction:column;gap:16px}
+.panel h2{margin:0;font-family:var(--font-display);font-weight:400}
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label,.field>.lbl{font-weight:600}
+.field small{color:var(--muted)}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;flex-wrap:wrap}
+.seg button{flex:1;min-height:42px;border:0;background:transparent;padding:8px 10px;min-width:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);font-weight:600}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.toggle input{width:22px;height:22px;accent-color:var(--accent);flex:none}
+
+@media (max-width:560px){
+  .drill{grid-template-columns:70px 1fr auto}
+  .drill .mini{width:70px}
+  .namepad button{min-height:52px;font-size:1.05rem}
+  .wk{font-size:.62rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+
+<div class="app" id="app"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.3/build/cjs/vexflow-bravura.js"></script>
+<script>
+(() => {
+"use strict";
+/* ---------------- data ---------------- */
+const STORE_KEY = "pautaviva.v1";
+const LEVELS = [["easy","Fácil"],["medium","Médio"],["hard","Difícil"]];
+const LEVEL_HINT = {easy:"Poucas notas, as mais próximas do Dó central.", medium:"Todas as notas dentro da pauta.", hard:"Mais notas, incluindo as de fora da pauta, como o Dó central."};
+const T = (...ks) => ks.map(k => k+"@t"), B = (...ks) => ks.map(k => k+"@b");
+const DRILLS = [
+  {id:"g-spaces", clef:"treble", title:"Notas nos espaços", levels:{
+    easy:["f/4","a/4","c/5"], medium:["f/4","a/4","c/5","e/5"], hard:["d/4","f/4","a/4","c/5","e/5","g/5"]}},
+  {id:"g-lines", clef:"treble", title:"Notas nas linhas", levels:{
+    easy:["e/4","g/4","b/4"], medium:["e/4","g/4","b/4","d/5","f/5"], hard:["c/4","e/4","g/4","b/4","d/5","f/5","a/5"]}},
+  {id:"g-mix", clef:"treble", title:"Linhas e espaços", levels:{
+    easy:["e/4","f/4","g/4","a/4","b/4"], medium:["e/4","f/4","g/4","a/4","b/4","c/5","d/5","e/5","f/5"],
+    hard:["c/4","d/4","e/4","f/4","g/4","a/4","b/4","c/5","d/5","e/5","f/5","g/5","a/5"]}},
+  {id:"f-spaces", clef:"bass", title:"Notas nos espaços", levels:{
+    easy:["c/3","e/3","g/3"], medium:["a/2","c/3","e/3","g/3"], hard:["f/2","a/2","c/3","e/3","g/3","b/3"]}},
+  {id:"f-lines", clef:"bass", title:"Notas nas linhas", levels:{
+    easy:["d/3","f/3","a/3"], medium:["g/2","b/2","d/3","f/3","a/3"], hard:["e/2","g/2","b/2","d/3","f/3","a/3","c/4"]}},
+  {id:"f-mix", clef:"bass", title:"Linhas e espaços", levels:{
+    easy:["d/3","e/3","f/3","g/3","a/3"], medium:["g/2","a/2","b/2","c/3","d/3","e/3","f/3","g/3","a/3"],
+    hard:["e/2","f/2","g/2","a/2","b/2","c/3","d/3","e/3","f/3","g/3","a/3","b/3","c/4"]}},
+  {id:"grand-c", clef:"grand", title:"Posição do Dó central", levels:{
+    easy:[...T("c/4","d/4","e/4"), ...B("c/4","b/3","a/3")],
+    medium:[...T("c/4","d/4","e/4","f/4","g/4"), ...B("c/4","b/3","a/3","g/3","f/3")],
+    hard:[...T("c/4","d/4","e/4","f/4","g/4","a/4","b/4","c/5"), ...B("c/4","b/3","a/3","g/3","f/3","e/3","d/3","c/3")]}},
+];
+const CLEFS = {
+  treble:{name:"Clave de Sol", hint:"Mão direita, do Dó central para cima", low:60, high:84},
+  bass:{name:"Clave de Fá", hint:"Mão esquerda, do Dó central para baixo", low:36, high:60},
+  grand:{name:"Pauta dupla", hint:"As duas mãos, ao redor do Dó central", low:48, high:72},
+};
+const ROUND = 20;
+const LETTERS = ["c","d","e","f","g","a","b"];
+const SEMI = {c:0,d:2,e:4,f:5,g:7,a:9,b:11};
+const SOLF = {c:"Dó",d:"Ré",e:"Mi",f:"Fá",g:"Sol",a:"Lá",b:"Si"};
+const PC_NAMES = ["c","c#","d","d#","e","f","f#","g","g#","a","a#","b"];
+
+const pk = k => k.split("@")[0];
+const onBass = k => k.endsWith("@b");
+const keyToMidi = k => { const [l,o] = pk(k).split("/"); return (parseInt(o,10)+1)*12 + SEMI[l]; };
+const midiToKey = m => { const pc = PC_NAMES[m%12]; return pc + "/" + (Math.floor(m/12)-1); };
+const fmt1 = x => x.toLocaleString("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1});
+const isBlack = m => [1,3,6,8,10].includes(m%12);
+
+/* ---------------- state & storage ---------------- */
+const defaults = {names:"solfege", input:"piano", octave:true, sound:true, showName:true};
+let saved = {best:{}, settings:{...defaults}, level:{}};
+try { const raw = localStorage.getItem(STORE_KEY); if (raw) { const p = JSON.parse(raw); saved = {best:p.best||{}, settings:{...defaults, ...(p.settings||{})}, level:p.level||{}}; } } catch(e) {}
+saved.level = saved.level || {};
+// v1 scores were the "medium" note set
+Object.keys(saved.best).forEach(k => { if (!k.includes(":")) { saved.best[k+":medium"] = saved.best[k+":medium"] || saved.best[k]; delete saved.best[k]; } });
+const persist = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(saved)); } catch(e) {} };
+const S = () => saved.settings;
+
+function noteName(letter, withOctave, octave){
+  const base = S().names === "solfege" ? SOLF[letter] : letter.toUpperCase();
+  return withOctave ? `${base}${octave}` : base;
+}
+function midiName(m){
+  const pc = PC_NAMES[m%12]; const oct = Math.floor(m/12)-1;
+  const l = pc[0]; const sharp = pc.length>1 ? "♯" : "";
+  const base = (S().names === "solfege" ? SOLF[l] : l.toUpperCase()) + sharp;
+  return `${base} (${l.toUpperCase()}${sharp}${oct})`;
+}
+
+/* ---------------- audio: small piano-like synth ---------------- */
+let actx = null;
+function audio(){ if (!actx) { try { actx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {} } if (actx && actx.state==="suspended") actx.resume(); return actx; }
+function playMidi(m, vel=0.8){
+  if (!S().sound) return; const ac = audio(); if (!ac) return;
+  const f = 440*Math.pow(2,(m-69)/12), t = ac.currentTime;
+  const out = ac.createGain(); out.gain.value = 0.0001; out.connect(ac.destination);
+  const lp = ac.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value = Math.min(9000, f*9); lp.connect(out);
+  const partials = [[1,1],[2,.42],[3,.2],[4,.11],[5,.06]];
+  partials.forEach(([h,a])=>{ const o = ac.createOscillator(); o.type = "sine"; o.frequency.value = f*h*(1+0.0004*h*h);
+    const g = ac.createGain(); g.gain.value = a; o.connect(g); g.connect(lp); o.start(t); o.stop(t+2.6); });
+  const peak = 0.28*vel;
+  out.gain.setValueAtTime(0.0001,t); out.gain.exponentialRampToValueAtTime(peak,t+0.006);
+  out.gain.exponentialRampToValueAtTime(peak*0.35,t+0.35); out.gain.exponentialRampToValueAtTime(0.0001,t+2.5);
+}
+function playBuzz(){ if (!S().sound) return; const ac = audio(); if (!ac) return; const t=ac.currentTime;
+  const o=ac.createOscillator(), g=ac.createGain(); o.type="square"; o.frequency.value=110; g.gain.setValueAtTime(0.0001,t);
+  g.gain.exponentialRampToValueAtTime(0.05,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+0.18); o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+0.2); }
+
+/* ---------------- MIDI ---------------- */
+const midi = {status:"checking", names:[], access:null};
+let midiListener = null;     // current screen's handler
+function bindInputs(){
+  if (!midi.access) return;
+  midi.names = [];
+  midi.access.inputs.forEach(inp => { midi.names.push(inp.name || "Teclado MIDI"); inp.onmidimessage = onMidiMessage; });
+  midi.status = midi.names.length ? "on" : "none";
+  updateChip();
+}
+function onMidiMessage(e){
+  const [st, note, vel] = e.data; const cmd = st & 0xF0;
+  if (cmd === 0x90 && vel > 0) { flashChip(); if (midiListener) midiListener(note, "midi"); }
+}
+async function initMidi(){
+  if (!navigator.requestMIDIAccess) { midi.status = "unsupported"; updateChip(); return; }
+  try {
+    midi.access = await navigator.requestMIDIAccess({sysex:false});
+    midi.access.onstatechange = bindInputs; bindInputs();
+  } catch(e) { midi.status = "denied"; updateChip(); }
+}
+function chipText(){
+  switch (midi.status){
+    case "on": return "Piano conectado: " + midi.names.join(", ");
+    case "none": return "MIDI pronto, nenhum piano ligado";
+    case "unsupported": return "Este navegador não lê MIDI";
+    case "denied": return "Acesso ao MIDI negado";
+    default: return "Procurando MIDI…";
+  }
+}
+function updateChip(){ document.querySelectorAll(".midichip").forEach(c => { c.classList.toggle("on", midi.status==="on"); c.querySelector("span").textContent = chipText(); }); }
+let chipTimer;
+function flashChip(){ document.querySelectorAll(".midichip").forEach(c=>c.classList.add("flash")); clearTimeout(chipTimer);
+  chipTimer = setTimeout(()=>document.querySelectorAll(".midichip").forEach(c=>c.classList.remove("flash")),160); }
+
+/* ---------------- notation (VexFlow) ---------------- */
+const VF = window.Vex && Vex.Flow;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function drawStaff(el, clef, keys, opts={}){
+  if (clef === "grand") return drawGrand(el, keys, opts);
+  keys = keys.map(pk);
+  el.innerHTML = "";
+  if (!VF) { el.textContent = "Não foi possível carregar a pauta. Verifique a internet e recarregue."; return null; }
+  const {width=700, scale=1.6, current=-1, states=[], ghost=null, mini=false} = opts;
+  const ink = css("--ink"), muted = css("--muted"), accent = css("--accent"), ok = css("--ok"), bad = css("--bad"), soft = css("--accent-soft");
+  const innerW = width/scale;
+  const r = new VF.Renderer(el, VF.Renderer.Backends.SVG);
+  const h = mini ? 44 : Math.round(112*scale);
+  r.resize(width, h);
+  const ctx = r.getContext(); ctx.scale(scale, scale);
+  const y = mini ? 20 : 32;
+  const stave = new VF.Stave(2, y, innerW-6, {space_above_staff_ln:0});
+  if (!mini) stave.addClef(clef);
+  stave.setContext(ctx);
+  stave.setStyle({strokeStyle: muted, fillStyle: ink});
+  const notes = keys.map((k,i) => {
+    const n = new VF.StaveNote({keys:[k], duration:"w", clef, align_center:false});
+    let col = muted;
+    if (i === current) col = ink;
+    if (states[i] === "ok") col = ok;
+    if (states[i] === "bad") col = bad;
+    n.setStyle({fillStyle: col, strokeStyle: col});
+    n.setLedgerLineStyle({strokeStyle: col, fillStyle: col});
+    return n;
+  });
+  const voice = new VF.Voice({num_beats: Math.max(1,notes.length)*4, beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+  const voices = [voice];
+  let gnotes = null;
+  if (ghost && current >= 0) {
+    gnotes = keys.map((k,i) => {
+      if (i !== current) return new VF.GhostNote({duration:"w"});
+      const gn = new VF.StaveNote({keys:[ghost], duration:"w", clef});
+      if (ghost.includes("#")) gn.addModifier(new VF.Accidental("#"), 0);
+      gn.setStyle({fillStyle: bad, strokeStyle: bad}); gn.setLedgerLineStyle({strokeStyle: bad});
+      return gn;
+    });
+    voices.push(new VF.Voice({num_beats: Math.max(1,notes.length)*4, beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(gnotes));
+  }
+  const fmt = new VF.Formatter();
+  fmt.joinVoices(voices);
+  const startX = stave.getNoteStartX();
+  fmt.format(voices, stave.getX()+stave.getWidth()-startX-(mini?6:24));
+  voices.forEach(v => { v.setStave(stave); });
+  voice.preFormat && voice.preFormat();
+  // highlight band behind the current note
+  ctx.setFillStyle(ink); ctx.setStrokeStyle(muted);
+  stave.draw();
+  voices.forEach(v => v.draw(ctx, stave));
+  if (current >= 0 && !mini) {
+    const nx = notes[current].getAbsoluteX(), nw = notes[current].getGlyphWidth ? notes[current].getGlyphWidth() : 14;
+    bandBehind(el, ctx, soft, nx-12, y-26, nw+24, 40+52);
+  }
+  const svg = el.querySelector("svg");
+  if (svg) { svg.removeAttribute("width"); svg.removeAttribute("height");
+    svg.style.width = width+"px"; svg.style.maxWidth="100%"; svg.style.height="auto"; svg.setAttribute("role","img"); svg.setAttribute("aria-label","Pauta"); }
+  return {notes, stave};
+}
+
+function bandBehind(el, ctx, color, x, y, w, hh){
+  ctx.save(); ctx.setFillStyle(color); ctx.fillRect(x, y, w, hh); ctx.restore();
+  const svg = el.querySelector("svg"); if (!svg) return;
+  const rects = svg.querySelectorAll("rect"); const band = rects[rects.length-1];
+  if (band) { band.remove(); svg.insertBefore(band, svg.firstChild); }
+}
+function drawGrand(el, keys, opts={}){
+  el.innerHTML = "";
+  if (!VF) { el.textContent = "Não foi possível carregar a pauta. Verifique a internet e recarregue."; return null; }
+  const {width=700, scale=1.6, current=-1, states=[], ghost=null} = opts;
+  const ink = css("--ink"), muted = css("--muted"), ok = css("--ok"), bad = css("--bad"), soft = css("--accent-soft");
+  const innerW = width/scale, H = 196;
+  const r = new VF.Renderer(el, VF.Renderer.Backends.SVG);
+  const h = Math.round(H*scale); r.resize(width, h);
+  const ctx = r.getContext(); ctx.scale(scale, scale);
+  const yT = 26, yB = 116, x0 = 16;
+  const top = new VF.Stave(x0, yT, innerW-x0-4, {space_above_staff_ln:0}).addClef("treble");
+  const bot = new VF.Stave(x0, yB, innerW-x0-4, {space_above_staff_ln:0}).addClef("bass");
+  [top,bot].forEach(sv => { sv.setContext(ctx); sv.setStyle({strokeStyle: muted, fillStyle: ink}); });
+  try { VF.Stave.formatBegModifiers([top, bot]); } catch(e) {}
+  const startX = Math.max(top.getNoteStartX(), bot.getNoteStartX()); top.setNoteStartX(startX); bot.setNoteStartX(startX);
+  const colorFor = i => states[i]==="ok" ? ok : states[i]==="bad" ? bad : i===current ? ink : muted;
+  const mk = (staff) => keys.map((k,i) => {
+    if ((onBass(k) ? "b" : "t") !== staff) return new VF.GhostNote({duration:"w"});
+    const n = new VF.StaveNote({keys:[pk(k)], duration:"w", clef: staff==="t" ? "treble" : "bass"});
+    const col = colorFor(i); n.setStyle({fillStyle: col, strokeStyle: col}); n.setLedgerLineStyle({strokeStyle: col, fillStyle: col});
+    return n;
+  });
+  const voiceOf = notes => new VF.Voice({num_beats: Math.max(1,notes.length)*4, beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+  const tn = mk("t"), bn = mk("b");
+  const tv = voiceOf(tn), bv = voiceOf(bn);
+  const groups = {t:[tv], b:[bv]};
+  if (ghost && current >= 0) {
+    const staff = onBass(keys[current]) ? "b" : "t";
+    const gn = keys.map((k,i) => {
+      if (i !== current) return new VF.GhostNote({duration:"w"});
+      const n = new VF.StaveNote({keys:[ghost], duration:"w", clef: staff==="t" ? "treble" : "bass"});
+      if (ghost.includes("#")) n.addModifier(new VF.Accidental("#"), 0);
+      n.setStyle({fillStyle: bad, strokeStyle: bad}); n.setLedgerLineStyle({strokeStyle: bad}); return n;
+    });
+    groups[staff].push(voiceOf(gn));
+  }
+  const fmt = new VF.Formatter();
+  fmt.joinVoices(groups.t); fmt.joinVoices(groups.b);
+  fmt.format([...groups.t, ...groups.b], top.getX()+top.getWidth()-startX-24);
+  groups.t.forEach(v => v.setStave(top)); groups.b.forEach(v => v.setStave(bot));
+  ctx.setFillStyle(ink); ctx.setStrokeStyle(muted);
+  top.draw(); bot.draw();
+  [VF.StaveConnector.type.BRACE, VF.StaveConnector.type.SINGLE_LEFT, VF.StaveConnector.type.SINGLE_RIGHT].forEach(t => {
+    const c = new VF.StaveConnector(top, bot).setType(t); c.setContext(ctx); c.draw(); });
+  groups.t.forEach(v => v.draw(ctx, top)); groups.b.forEach(v => v.draw(ctx, bot));
+  if (current >= 0) {
+    const real = (onBass(keys[current]) ? bn : tn)[current];
+    const nx = real.getAbsoluteX(), nw = real.getGlyphWidth ? real.getGlyphWidth() : 14;
+    bandBehind(el, ctx, soft, nx-12, yT-24, nw+24, (yB+40+24)-(yT-24));
+  }
+  const svg = el.querySelector("svg");
+  if (svg) { svg.removeAttribute("width"); svg.removeAttribute("height");
+    svg.style.width = width+"px"; svg.style.maxWidth="100%"; svg.style.height="auto"; svg.setAttribute("role","img"); svg.setAttribute("aria-label","Pauta dupla"); }
+  return {};
+}
+
+/* ---------------- UI helpers ---------------- */
+const $ = (sel, root=document) => root.querySelector(sel);
+const h = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const STAR = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.5 6.1 20.6l1.2-6.5L2.5 9.5l6.6-.9z"/></svg>`;
+const starRow = (n, cls="stars") => `<span class="${cls}" aria-label="${n} de 5 estrelas">${[1,2,3,4,5].map(i=>`<span class="${i<=n?"f":""}">${STAR}</span>`).join("")}</span>`;
+const GEAR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>`;
+const BACK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>`;
+const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="9" fill="var(--accent)"/><g stroke="var(--on-accent)" stroke-width="1.3" opacity=".75"><path d="M6 10h20M6 14h20M6 18h20M6 22h20"/></g><ellipse cx="17" cy="16" rx="4.2" ry="3" transform="rotate(-20 17 16)" fill="var(--on-accent)"/></svg>`;
+const midiChip = () => `<span class="chip midichip ${midi.status==="on"?"on":""}" role="status"><i class="dot"></i><span>${chipText()}</span></span>`;
+
+let screenCleanup = null;
+function mount(node){ if (screenCleanup) { screenCleanup(); screenCleanup = null; } midiListener = null; const app = $("#app"); app.innerHTML=""; app.appendChild(node); }
+
+/* ---------------- home ---------------- */
+function poolFor(d, level){ return d.levels[level] || d.levels.medium; }
+const bestOf = (d, lv) => saved.best[d.id+":"+lv];
+const lastLevel = d => saved.level[d.id] || "medium";
+function renderHome(){
+  const groups = ["treble","bass","grand"].map(c => {
+    const items = DRILLS.filter(d=>d.clef===c).map(d => {
+      const top = Math.max(0, ...LEVELS.map(([lv]) => (bestOf(d,lv)||{stars:0}).stars));
+      const sub = LEVELS.map(([lv,label]) => { const b = bestOf(d,lv); return `<span>${label} ${b ? b.stars+"★" : "–"}</span>`; }).join(" · ");
+      return `<button class="drill" data-id="${d.id}"><div class="mini" data-mini="${d.id}"></div><div><b>${d.title}</b><span class="sub">${sub}</span></div>${starRow(top)}</button>`;
+    }).join("");
+    return `<section class="group"><div class="group-head"><div class="clefmark" data-clef="${c}"></div><div><h2>${CLEFS[c].name}</h2><small>${CLEFS[c].hint}</small></div></div>${items}</section>`;
+  }).join("");
+  const node = h(`<div class="screen home">
+    <header class="top"><div class="brand">${LOGO}Pauta Viva</div><div class="spacer"></div>${midiChip()}<button class="iconbtn" id="gear" aria-label="Ajustes">${GEAR}</button></header>
+    <div class="intro"><h1>Leia a nota, toque a tecla</h1><p>Escolha um exercício. Cada rodada tem ${ROUND} notas; responda pelo seu piano (MIDI) ou pelo teclado da tela. Ganhe estrelas pela precisão e pela velocidade.</p></div>
+    <div class="groups">${groups}</div>
+    <section class="midi-test"><div><h3>Teste do piano</h3><p>Toque qualquer tecla no seu piano. Se o nome aparecer aqui ao lado, o MIDI está funcionando.</p></div><div class="lastkey" id="lastkey">—</div></section>
+  </div>`);
+  mount(node);
+  node.querySelectorAll(".drill").forEach(b => b.addEventListener("click", () => { audio(); const d = DRILLS.find(x=>x.id===b.dataset.id); renderDrill(d, lastLevel(d)); }));
+  $("#gear", node).addEventListener("click", () => openSettings(renderHome));
+  // clef marks & mini staves
+  node.querySelectorAll("[data-clef]").forEach(el => {
+    if (!VF) return; const c = el.dataset.clef === "grand" ? "treble" : el.dataset.clef; el.innerHTML="";
+    const r = new VF.Renderer(el, VF.Renderer.Backends.SVG); r.resize(46,58); const ctx=r.getContext();
+    ctx.scale(0.62,0.62); ctx.setFillStyle(css("--accent")); ctx.setStrokeStyle(css("--accent"));
+    const st = new VF.Stave(-10, c==="treble"?-8:-14, 80); st.addClef(c); st.setContext(ctx);
+    st.setBegBarType(VF.Barline.type.NONE); st.setEndBarType(VF.Barline.type.NONE); st.setStyle({strokeStyle:"transparent"}); st.draw();
+  });
+  node.querySelectorAll("[data-mini]").forEach(el => {
+    const d = DRILLS.find(x=>x.id===el.dataset.mini);
+    const notes = d.levels.medium.filter(k => !onBass(k)).slice(0,5);
+    drawStaff(el, d.clef === "grand" ? "treble" : d.clef, notes, {width:96, scale:0.55, mini:true});
+  });
+  midiListener = (m) => { const el = $("#lastkey"); if (el) el.textContent = midiName(m); };
+}
+
+/* ---------------- settings ---------------- */
+function openSettings(onClose){
+  const s = S();
+  const seg = (key, opts) => `<div class="seg" data-key="${key}">${opts.map(([v,l])=>`<button type="button" data-v="${v}" aria-pressed="${String(s[key])===String(v)}">${l}</button>`).join("")}</div>`;
+  const tog = (key, label, hint) => `<label class="toggle" for="opt-${key}"><span><b>${label}</b><br><small>${hint}</small></span><input type="checkbox" id="opt-${key}" data-key="${key}" ${s[key]?"checked":""}></label>`;
+  const node = h(`<div class="sheet" role="dialog" aria-modal="true" aria-label="Ajustes"><div class="panel">
+    <h2>Ajustes</h2>
+    <div class="field"><span class="lbl">Nome das notas</span>${seg("names",[["solfege","Dó Ré Mi"],["letters","C D E"]])}</div>
+    <div class="field"><span class="lbl">Responder na tela com</span>${seg("input",[["piano","Teclado"],["names","Botões de nomes"],["none","Só o piano MIDI"]])}<small>O piano MIDI funciona em qualquer opção.</small></div>
+    ${tog("octave","Exigir a oitava certa","Vale para o piano e o teclado da tela. Desligado, qualquer Dó serve para um Dó.")}
+    ${tog("showName","Mostrar o nome ao acertar","Mostra o nome da nota depois de cada acerto.")}
+    ${tog("sound","Som do app","Toca a nota pelo iPad. O seu piano já faz o som quando você usa MIDI.")}
+    <div class="row"><button class="btn" id="close">Pronto</button></div>
+  </div></div>`);
+  document.body.appendChild(node);
+  node.querySelectorAll(".seg").forEach(sg => sg.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return; s[sg.dataset.key] = b.dataset.v; persist();
+    sg.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x===b)));
+  }));
+  node.querySelectorAll("input[type=checkbox]").forEach(i => i.addEventListener("change", () => { s[i.dataset.key] = i.checked; persist(); }));
+  const close = () => { node.remove(); onClose && onClose(); };
+  $("#close", node).addEventListener("click", close);
+  node.addEventListener("click", e => { if (e.target === node) close(); });
+}
+
+/* ---------------- drill ---------------- */
+function makeSequence(pool, n){
+  const seq = []; let prev = null;
+  for (let i=0;i<n;i++){ let k; do { k = pool[Math.floor(Math.random()*pool.length)]; } while (pool.length>1 && k===prev); seq.push(k); prev = k; }
+  return seq;
+}
+function renderDrill(d, level="medium"){
+  saved.level[d.id] = level; persist();
+  const pool = poolFor(d, level);
+  const levelLabel = LEVELS.find(x=>x[0]===level)[1];
+  const seq = makeSequence(pool, ROUND);
+  const st = {i:0, started:false, done:false, firstTry:Array(ROUND).fill(true), times:[], noteStart:0, t0:0, misses:{}, ghost:null, last:null, lock:false};
+  const node = h(`<div class="screen">
+    <header class="drillbar"><button class="iconbtn" id="back" aria-label="Voltar">${BACK}</button><h2>${CLEFS[d.clef].name} · ${d.title} · ${levelLabel}</h2><div class="spacer"></div>
+      <span class="stat" id="count">0/${ROUND}</span><span class="stat" id="clock">0:00</span>${midiChip()}</header>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="desk"><div id="staff"></div><div class="feedback info" id="fb"></div>
+      <div class="startcard" id="start"><div><h2 style="margin:0;font-family:var(--font-display);font-weight:400">${d.title}</h2>
+      <div class="seg levelseg" role="group" aria-label="Dificuldade">${LEVELS.map(([lv,label])=>{ const b=bestOf(d,lv); return `<button type="button" data-lv="${lv}" aria-pressed="${lv===level}">${label}${b?` · ${b.stars}★`:""}</button>`; }).join("")}</div>
+      <p>${LEVEL_HINT[level]} ${pool.length} notas diferentes:</p>
+      <div class="preview" id="preview"></div>
+      <button class="btn" id="go">Começar</button>
+      <p style="font-size:.85rem">${ROUND} notas por rodada · ${S().octave?"oitava exata":"qualquer oitava"} · você também pode começar tocando uma tecla do piano</p></div></div></div>
+    <div class="kbwrap" id="kbwrap"></div>
+  </div>`);
+  mount(node);
+  const staffEl = $("#staff", node), fb = $("#fb", node);
+  const WINDOW = 6;
+  function layoutWidth(){ return Math.min(staffEl.clientWidth || 700, 1000); }
+  function render(slide=false){
+    const start = Math.max(0, st.i-1);
+    const keys = seq.slice(start, start+WINDOW);
+    const states = keys.map((_,j) => { const idx = start+j; if (idx < st.i) return st.firstTry[idx] ? "ok" : "bad"; return ""; });
+    const w = layoutWidth();
+    const sc = w < 520 ? 1.15 : w < 800 ? 1.45 : 1.75;
+    drawStaff(staffEl, d.clef, keys, {width:w, scale:sc, current: st.done ? -1 : st.i-start, states, ghost: st.ghost});
+    if (slide) { staffEl.classList.remove("slide"); void staffEl.offsetWidth; staffEl.style.setProperty("--slide", Math.round(w/WINDOW*0.6)+"px"); staffEl.classList.add("slide"); }
+  }
+  // keyboard
+  const kbwrap = $("#kbwrap", node);
+  const keyEls = {};
+  function buildKeyboard(){
+    kbwrap.innerHTML = ""; kbwrap.hidden = S().input === "none";
+    if (S().input === "names") {
+      const pad = h(`<div class="namepad">${LETTERS.map(l=>`<button data-l="${l}">${noteName(l)}</button>`).join("")}</div>`);
+      pad.addEventListener("pointerdown", e => { const b = e.target.closest("button"); if (!b) return; e.preventDefault(); answerLetter(b.dataset.l, b); });
+      kbwrap.appendChild(pad); return;
+    }
+    const {low, high} = CLEFS[d.clef];
+    const kb = h(`<div class="kb" role="group" aria-label="Teclado"></div>`);
+    const whites = []; for (let m=low; m<=high; m++) if (!isBlack(m)) whites.push(m);
+    whites.forEach(m => {
+      const k = h(`<div class="wk" data-m="${m}"></div>`); kb.appendChild(k); keyEls[m]=k; });
+    const ww = 100/whites.length;
+    whites.forEach((m,i) => { if (m+1<=high && isBlack(m+1)) { const b = h(`<div class="bk" data-m="${m+1}"></div>`); b.style.left = `calc(${(i+1)*ww}% - ${ww*0.3}%)`; b.style.width = `${ww*0.6}%`; kb.appendChild(b); keyEls[m+1]=b; } });
+    kb.addEventListener("pointerdown", e => { const k = e.target.closest("[data-m]"); if (!k) return; e.preventDefault(); const m = +k.dataset.m;
+      k.classList.add("down"); setTimeout(()=>k.classList.remove("down"),140); handleMidi(m, "screen"); });
+    kbwrap.appendChild(kb);
+  }
+  function flashKey(m, cls){ const k = keyEls[m]; if (!k) return; k.classList.remove("okflash","badflash"); void k.offsetWidth; k.classList.add(cls); setTimeout(()=>k.classList.remove(cls), 380); }
+  // timing
+  let raf = 0;
+  function tick(){ if (!st.started || st.done) return; const s = Math.floor((performance.now()-st.t0)/1000); $("#clock").textContent = `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`; raf = requestAnimationFrame(tick); }
+  let wake = null;
+  async function begin(){
+    if (st.started) return; st.started = true; audio();
+    $("#start", node).remove(); st.t0 = st.noteStart = performance.now(); tick(); render();
+    fb.className = "feedback info"; fb.textContent = "Toque a nota destacada.";
+    try { wake = await navigator.wakeLock?.request("screen"); } catch(e) {}
+  }
+  function updateProgress(){ $("#count").textContent = `${st.i}/${ROUND}`; $("#prog").style.width = (st.i/ROUND*100)+"%"; }
+  function correct(viaLetter){
+    const target = seq[st.i]; const m = keyToMidi(target);
+    st.times.push((performance.now()-st.noteStart)/1000);
+    if (viaLetter !== "midi") playMidi(m);
+    const [l, o] = pk(target).split("/");
+    fb.className = "feedback ok"; fb.textContent = S().showName ? `Certo! ${noteName(l)}${S().octave?` (${l.toUpperCase()}${o})`:""}` : "Certo!";
+    st.ghost = null; st.i++; updateProgress();
+    if (st.i >= ROUND) { finish(); return; }
+    st.noteStart = performance.now(); render(true);
+  }
+  function wrong(playedLabel, ghostKey){
+    const target = seq[st.i];
+    if (st.firstTry[st.i]) { st.firstTry[st.i] = false; st.misses[target] = (st.misses[target]||0)+1; }
+    st.ghost = ghostKey; playBuzz();
+    fb.className = "feedback bad"; fb.textContent = `Você tocou ${playedLabel}. Tente de novo.`;
+    render(); staffEl.classList.remove("shake"); void staffEl.offsetWidth; staffEl.classList.add("shake");
+  }
+  function handleMidi(m, src){
+    if (src === "midi" && keyEls[m]) { keyEls[m].classList.add("down"); setTimeout(()=>keyEls[m] && keyEls[m].classList.remove("down"),140); }
+    if (!st.started) { if (src==="screen") playMidi(m); begin(); return; }
+    if (st.done) return;
+    const target = keyToMidi(seq[st.i]);
+    const okay = S().octave ? m === target : (m%12) === (target%12);
+    if (okay) { flashKey(m,"okflash"); correct(src); }
+    else {
+      if (src === "screen") playMidi(m);
+      flashKey(m,"badflash");
+      // ghost: place the played pitch on the staff (pitch class moved near the target when octave doesn't matter)
+      let gm = m; if (!S().octave) { gm = target - (target%12) + (m%12); if (gm - target > 6) gm -= 12; if (target - gm > 6) gm += 12; }
+      const showable = gm >= CLEFS[d.clef].low - 5 && gm <= CLEFS[d.clef].high + 5;
+      wrong(midiName(m).replace(/ \(.*/, "") + (S().octave ? midiName(m).match(/ \(.*/)[0] : ""), showable ? midiToKey(gm) : null);
+    }
+  }
+  function answerLetter(l, btn){
+    if (!st.started) { begin(); return; }
+    if (st.done) return;
+    const target = seq[st.i];
+    const flash = cls => { btn.classList.remove("okflash","badflash"); void btn.offsetWidth; btn.classList.add(cls); setTimeout(()=>btn.classList.remove(cls),380); };
+    if (pk(target)[0] === l) { flash("okflash"); correct("names"); }
+    else { flash("badflash"); const tm = keyToMidi(target); let gm = tm - (tm%12) + SEMI[l]; if (gm-tm>6) gm-=12; if (tm-gm>6) gm+=12; wrong(noteName(l), midiToKey(gm)); }
+  }
+  function finish(){
+    st.done = true; cancelAnimationFrame(raf); try { wake && wake.release(); } catch(e) {}
+    const acc = st.firstTry.filter(Boolean).length/ROUND;
+    const avg = st.times.reduce((a,b)=>a+b,0)/st.times.length;
+    let stars = 0; if (acc>=0.6) stars=1; if (acc>=0.75) stars=2; if (acc>=0.9) stars=3; if (acc>=0.95 && avg<=2.0) stars=4; if (acc===1 && avg<=1.2) stars=5;
+    const bk = d.id+":"+level; const prev = saved.best[bk]; const isBest = !prev || stars>prev.stars || (stars===prev.stars && (acc>prev.acc || (acc===prev.acc && avg<prev.avg)));
+    if (isBest) { saved.best[bk] = {stars, acc, avg}; persist(); }
+    setTimeout(() => renderResults(d, level, {stars, acc, avg, total:(performance.now()-st.t0)/1000, misses:st.misses, isBest, hadPrev:!!prev}), 450);
+  }
+  midiListener = (m) => handleMidi(m, "midi");
+  $("#back", node).addEventListener("click", renderHome);
+  $("#go", node).addEventListener("click", begin);
+  node.querySelectorAll(".levelseg button").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); if (b.dataset.lv !== level) renderDrill(d, b.dataset.lv); }));
+  const sortedPool = [...pool].sort((a,b) => (onBass(a)-onBass(b)) || (onBass(a) ? keyToMidi(b)-keyToMidi(a) : keyToMidi(a)-keyToMidi(b)));
+  requestAnimationFrame(() => { const pv = $("#preview", node); if (pv) drawStaff(pv, d.clef, sortedPool, {width: Math.min(540, (pv.clientWidth||420)), scale: d.clef==="grand"?0.72:0.95}); });
+  buildKeyboard();
+  updateProgress();
+  // first frame: show the staff behind the start card
+  requestAnimationFrame(() => render());
+  const onResize = () => render();
+  window.addEventListener("resize", onResize);
+  const mq = matchMedia("(prefers-color-scheme: dark)"); const onTheme = () => render(); mq.addEventListener?.("change", onTheme);
+  screenCleanup = () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); mq.removeEventListener?.("change", onTheme); try { wake && wake.release(); } catch(e) {} };
+}
+
+/* ---------------- results ---------------- */
+function renderResults(d, level, r){
+  const levelLabel = LEVELS.find(x=>x[0]===level)[1];
+  const missed = Object.entries(r.misses).sort((a,b)=>b[1]-a[1]).slice(0,4)
+    .map(([k,c]) => { const [l,o]=pk(k).split("/"); const where = d.clef==="grand" ? (onBass(k)?" na clave de fá":" na clave de sol") : ""; return `${noteName(l)} (${l.toUpperCase()}${o})${where}${c>1?` ${c}×`:""}`; });
+  const titles = ["Continue praticando","Bom começo","Muito bem","Excelente","Quase perfeito","Perfeito!"];
+  const node = h(`<div class="screen">
+    <header class="top"><div class="brand">${LOGO}Pauta Viva</div><div class="spacer"></div>${midiChip()}</header>
+    <div class="results"><div class="rcard">
+      <span style="color:var(--muted)">${CLEFS[d.clef].name} · ${d.title} · ${levelLabel}</span>
+      <h2>${titles[r.stars]}</h2>
+      <div class="bigstars">${[1,2,3,4,5].map(i=>`<span class="${i<=r.stars?"f":""}" style="animation-delay:${i*0.09}s">${STAR}</span>`).join("")}</div>
+      ${r.isBest && r.hadPrev ? `<strong style="color:var(--ok)">Novo recorde!</strong>` : ""}
+      <div class="nums"><div><b>${Math.round(r.acc*100)}%</b><span>acertos de primeira</span></div><div><b>${fmt1(r.avg)} s</b><span>média por nota</span></div><div><b>${Math.floor(r.total/60)}:${String(Math.floor(r.total%60)).padStart(2,"0")}</b><span>tempo total</span></div></div>
+      <p class="missed">${missed.length ? `Para revisar: <b>${missed.join(", ")}</b>` : "Nenhum erro nesta rodada."}</p>
+      <p class="rule">Estrelas: 1 com 60% de acertos, 2 com 75%, 3 com 90%, 4 com 95% e até 2 s por nota, 5 com 100% e até 1,2 s por nota.</p>
+      <div class="row"><button class="btn" id="again">Repetir</button><button class="btn ghost" id="home">Outros exercícios</button></div>
+    </div></div></div>`);
+  mount(node);
+  $("#again", node).addEventListener("click", () => renderDrill(d, level));
+  $("#home", node).addEventListener("click", renderHome);
+  midiListener = (m) => {}; // ignore stray keys here
+}
+
+renderHome();
+initMidi();
+})();
+</script>
+
+</body>
+</html>
