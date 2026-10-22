@@ -61,10 +61,10 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .home{overflow:auto;padding-bottom:8px}
 .intro{display:flex;flex-direction:column;gap:4px}
 .intro h1{font-family:var(--font-display);font-weight:400;font-size:clamp(1.6rem,3.4vw,2.3rem);margin:0;text-wrap:balance}
-.intro p{margin:0;color:var(--muted);max-width:62ch}
+.intro p{margin:0;color:var(--muted);max-width:66ch}
 .groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 @media (max-width:700px){.groups{grid-template-columns:minmax(0,1fr)}}
-.drill .sub span{white-space:nowrap}
+.groups .group:last-child:nth-child(odd){grid-column:1/-1}
 .group{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .group-head{display:flex;align-items:center;gap:12px}
 .group-head .clefmark{width:46px;height:58px;flex:none}
@@ -76,6 +76,8 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .drill .mini{width:96px;height:44px}
 .drill b{display:block;font-weight:600}
 .drill .sub{color:var(--muted);font-size:.85rem}
+.drill .sub span{white-space:nowrap}
+.tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-left:8px;vertical-align:2px}
 .stars{display:inline-flex;gap:2px;color:var(--line)}
 .stars svg{width:16px;height:16px}
 .stars .f{color:var(--star)}
@@ -89,8 +91,10 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .drillbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .drillbar h2{margin:0;font-family:var(--font-display);font-weight:400;font-size:1.25rem;min-width:0}
 .stat{font-variant-numeric:tabular-nums;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:.9rem}
+.stat.hot{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 .bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+.bar.timer i{transition:none}
 .desk{position:relative;flex:1;min-height:200px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
   display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
 #staff{width:100%;display:flex;justify-content:center}
@@ -102,13 +106,12 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .feedback{min-height:1.6em;font-weight:600;text-align:center;padding:0 12px 14px;font-size:1.05rem}
 .feedback.ok{color:var(--ok)} .feedback.bad{color:var(--bad)} .feedback.info{color:var(--muted);font-weight:500}
 .startcard{position:absolute;inset:0;display:grid;place-items:center;overflow:auto;background:var(--surface)}
-.startcard>div{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:16px;max-width:46ch}
+.startcard>div{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:16px;max-width:620px;width:100%}
 .startcard p{margin:0;color:var(--muted)}
-.startcard>div{max-width:620px!important;width:100%}
-.levelseg{width:100%;max-width:440px;background:var(--surface)}
+.startcard h2{margin:0;font-family:var(--font-display);font-weight:400}
+.levelseg,.modeseg{width:100%;max-width:460px;background:var(--surface)}
 .preview{width:100%;display:flex;justify-content:center}
 .preview svg{max-width:100%;height:auto}
-.groups .group:last-child:nth-child(odd){grid-column:1/-1}
 .btn{border:0;border-radius:12px;padding:12px 22px;font-weight:600;background:var(--accent);color:var(--on-accent);min-height:46px}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
 .btn:active{transform:translateY(1px)}
@@ -116,16 +119,19 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 /* keyboard */
 .kbwrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px 10px 12px}
 .kb{position:relative;display:flex;height:clamp(110px,22vh,190px);user-select:none;-webkit-user-select:none;touch-action:manipulation}
-.wk{flex:1;position:relative;background:var(--key-white);border:1px solid var(--key-edge);border-top:0;border-radius:0 0 8px 8px;
-  margin-right:-1px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font-size:.78rem;color:#6B7483;font-weight:600}
+.wk{flex:1;position:relative;background:var(--key-white);border:1px solid var(--key-edge);border-top:0;border-radius:0 0 8px 8px;margin-right:-1px}
 .bk{position:absolute;top:0;height:60%;background:var(--key-black);border-radius:0 0 6px 6px;z-index:2;border:1px solid #000}
-.wk.down{background:color-mix(in srgb,var(--accent) 30%,var(--key-white))}
-.bk.down{background:color-mix(in srgb,var(--accent) 55%,var(--key-black))}
-.wk.okflash{background:color-mix(in srgb,var(--ok) 40%,var(--key-white))}
+.wk.down,.wk.sel{background:color-mix(in srgb,var(--accent) 30%,var(--key-white))}
+.bk.down,.bk.sel{background:color-mix(in srgb,var(--accent) 60%,var(--key-black))}
+.wk.okflash,.bk.okflash{background:color-mix(in srgb,var(--ok) 45%,var(--key-white))}
 .wk.badflash,.bk.badflash{background:color-mix(in srgb,var(--bad) 45%,var(--key-white))}
-.wk.c-mark{color:var(--ink)}
-.namepad{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
-.namepad button{min-height:64px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);font-family:var(--font-display);font-size:1.3rem}
+.namepad{display:grid;grid-template-columns:repeat(14,1fr);gap:8px}
+.namepad button{grid-column:span 2;min-height:60px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);font-family:var(--font-display);font-size:1.2rem;line-height:1.1;padding:4px}
+.namepad.seven{grid-template-columns:repeat(7,1fr)}
+.namepad.seven button{grid-column:auto}
+.namepad button.blk{background:var(--key-black);color:#E7EBF1;border-color:#000;font-family:var(--font-body);font-size:.85rem;min-height:48px}
+.namepad button.sel{background:var(--accent-soft);border-color:var(--accent)}
+.namepad button.blk.sel{background:color-mix(in srgb,var(--accent) 60%,var(--key-black))}
 .namepad button.okflash{background:var(--ok-soft);border-color:var(--ok)}
 .namepad button.badflash{background:var(--bad-soft);border-color:var(--bad)}
 
@@ -138,6 +144,8 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 .bigstars svg{width:40px;height:40px}
 .bigstars .f{color:var(--star);animation:pop .35s ease backwards}
 @keyframes pop{from{transform:scale(.4);opacity:0}}
+.bigscore{font-family:var(--font-display);font-size:4rem;line-height:1;font-variant-numeric:tabular-nums;animation:pop .4s ease backwards}
+.bigscore small{display:block;font-family:var(--font-body);font-size:.9rem;color:var(--muted);margin-top:8px}
 .nums{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
 .nums div{background:var(--surface-2);border-radius:12px;padding:10px}
 .nums b{display:block;font-size:1.4rem;font-variant-numeric:tabular-nums}
@@ -164,8 +172,9 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 @media (max-width:560px){
   .drill{grid-template-columns:70px 1fr auto}
   .drill .mini{width:70px}
-  .namepad button{min-height:52px;font-size:1.05rem}
-  .wk{font-size:.62rem}
+  .namepad{gap:5px}
+  .namepad button{min-height:50px;font-size:.95rem}
+  .namepad button.blk{font-size:.66rem;min-height:42px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -182,67 +191,113 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid 
 "use strict";
 /* ---------------- data ---------------- */
 const STORE_KEY = "pautaviva.v1";
+const ROUND = 20, TIME_LIMIT = 60;
 const LEVELS = [["easy","Fácil"],["medium","Médio"],["hard","Difícil"]];
-const LEVEL_HINT = {easy:"Poucas notas, as mais próximas do Dó central.", medium:"Todas as notas dentro da pauta.", hard:"Mais notas, incluindo as de fora da pauta, como o Dó central."};
+const MODES = [["round",`Rodada de ${ROUND}`],["time",`Contra o tempo · ${TIME_LIMIT} s`]];
 const T = (...ks) => ks.map(k => k+"@t"), B = (...ks) => ks.map(k => k+"@b");
+// a chord is a comma-separated list of keys, low to high (root position triads)
+const SHAPES = {
+  c:{maj:["c","e","g"], min:["c","eb","g"]}, d:{maj:["d","f#","a"], min:["d","f","a"]},
+  e:{maj:["e","g#","b"], min:["e","g","b"]}, f:{maj:["f","a","c"], min:["f","ab","c"]},
+  g:{maj:["g","b","d"], min:["g","bb","d"]}, a:{maj:["a","c#","e"], min:["a","c","e"]},
+};
+const CH = (root, q, oct) => { const order = "cdefgab"; let o = oct, prev = -1;
+  return SHAPES[root][q].map(n => { const idx = order.indexOf(n[0]); if (idx < prev) o++; prev = idx; return `${n}/${o}`; }).join(","); };
+const chordSet = (oct, list) => list.map(([r,q]) => CH(r,q,oct));
+const EASY_CH = [["c","maj"],["f","maj"],["g","maj"]];
+const MED_CH = [["c","maj"],["d","min"],["e","min"],["f","maj"],["g","maj"],["a","min"]];
+const HARD_CH = [...MED_CH, ["d","maj"],["e","maj"],["a","maj"],["c","min"],["f","min"],["g","min"]];
+const CHORD_INFO = {};
+[3,4].forEach(o => HARD_CH.forEach(([r,q]) => { CHORD_INFO[CH(r,q,o)] = {root:r, q}; }));
+
 const DRILLS = [
-  {id:"g-spaces", clef:"treble", title:"Notas nos espaços", levels:{
+  {id:"g-spaces", clef:"treble", type:"note", title:"Notas nos espaços", levels:{
     easy:["f/4","a/4","c/5"], medium:["f/4","a/4","c/5","e/5"], hard:["d/4","f/4","a/4","c/5","e/5","g/5"]}},
-  {id:"g-lines", clef:"treble", title:"Notas nas linhas", levels:{
+  {id:"g-lines", clef:"treble", type:"note", title:"Notas nas linhas", levels:{
     easy:["e/4","g/4","b/4"], medium:["e/4","g/4","b/4","d/5","f/5"], hard:["c/4","e/4","g/4","b/4","d/5","f/5","a/5"]}},
-  {id:"g-mix", clef:"treble", title:"Linhas e espaços", levels:{
+  {id:"g-mix", clef:"treble", type:"note", title:"Linhas e espaços", levels:{
     easy:["e/4","f/4","g/4","a/4","b/4"], medium:["e/4","f/4","g/4","a/4","b/4","c/5","d/5","e/5","f/5"],
     hard:["c/4","d/4","e/4","f/4","g/4","a/4","b/4","c/5","d/5","e/5","f/5","g/5","a/5"]}},
-  {id:"f-spaces", clef:"bass", title:"Notas nos espaços", levels:{
+  {id:"g-acc", clef:"treble", type:"note", acc:true, isNew:true, title:"Sustenidos e bemóis", levels:{
+    easy:["f#/4","g#/4","a#/4","c#/5","d#/5"],
+    medium:["f#/4","g#/4","a#/4","c#/5","d#/5","gb/4","ab/4","bb/4","db/5","eb/5"],
+    hard:["c#/4","eb/4","f#/4","g#/4","a#/4","c#/5","d#/5","gb/4","ab/4","bb/4","db/5","eb/5","f#/5","e/4","f/4","g/4","a/4","b/4","c/5","d/5","e/5","f/5"]}},
+  {id:"g-chord", clef:"treble", type:"chord", isNew:true, title:"Acordes", levels:{
+    easy:chordSet(4,EASY_CH), medium:chordSet(4,MED_CH), hard:chordSet(4,HARD_CH)}},
+  {id:"f-spaces", clef:"bass", type:"note", title:"Notas nos espaços", levels:{
     easy:["c/3","e/3","g/3"], medium:["a/2","c/3","e/3","g/3"], hard:["f/2","a/2","c/3","e/3","g/3","b/3"]}},
-  {id:"f-lines", clef:"bass", title:"Notas nas linhas", levels:{
+  {id:"f-lines", clef:"bass", type:"note", title:"Notas nas linhas", levels:{
     easy:["d/3","f/3","a/3"], medium:["g/2","b/2","d/3","f/3","a/3"], hard:["e/2","g/2","b/2","d/3","f/3","a/3","c/4"]}},
-  {id:"f-mix", clef:"bass", title:"Linhas e espaços", levels:{
+  {id:"f-mix", clef:"bass", type:"note", title:"Linhas e espaços", levels:{
     easy:["d/3","e/3","f/3","g/3","a/3"], medium:["g/2","a/2","b/2","c/3","d/3","e/3","f/3","g/3","a/3"],
     hard:["e/2","f/2","g/2","a/2","b/2","c/3","d/3","e/3","f/3","g/3","a/3","b/3","c/4"]}},
-  {id:"grand-c", clef:"grand", title:"Posição do Dó central", levels:{
+  {id:"f-acc", clef:"bass", type:"note", acc:true, isNew:true, title:"Sustenidos e bemóis", levels:{
+    easy:["a#/2","c#/3","d#/3","f#/3","g#/3"],
+    medium:["a#/2","c#/3","d#/3","f#/3","g#/3","bb/2","db/3","eb/3","gb/3","ab/3"],
+    hard:["f#/2","ab/2","a#/2","c#/3","d#/3","f#/3","g#/3","bb/2","db/3","eb/3","gb/3","ab/3","bb/3","g/2","a/2","b/2","c/3","d/3","e/3","f/3","g/3","a/3"]}},
+  {id:"f-chord", clef:"bass", type:"chord", isNew:true, title:"Acordes", levels:{
+    easy:chordSet(3,EASY_CH), medium:chordSet(3,MED_CH), hard:chordSet(3,HARD_CH)}},
+  {id:"grand-c", clef:"grand", type:"note", title:"Posição do Dó central", levels:{
     easy:[...T("c/4","d/4","e/4"), ...B("c/4","b/3","a/3")],
     medium:[...T("c/4","d/4","e/4","f/4","g/4"), ...B("c/4","b/3","a/3","g/3","f/3")],
     hard:[...T("c/4","d/4","e/4","f/4","g/4","a/4","b/4","c/5"), ...B("c/4","b/3","a/3","g/3","f/3","e/3","d/3","c/3")]}},
 ];
+const LEVEL_HINT = {
+  note:{easy:"Poucas notas, as mais próximas do Dó central.", medium:"Todas as notas dentro da pauta.", hard:"Mais notas, incluindo as de fora da pauta, como o Dó central."},
+  acc:{easy:"Só sustenidos.", medium:"Sustenidos e bemóis.", hard:"Sustenidos, bemóis e notas naturais misturados: preste atenção no acidente."},
+  chord:{easy:"Dó, Fá e Sol maior.", medium:"Os acordes maiores e menores das teclas brancas.", hard:"Maiores e menores, incluindo os que usam teclas pretas."},
+};
 const CLEFS = {
   treble:{name:"Clave de Sol", hint:"Mão direita, do Dó central para cima", low:60, high:84},
   bass:{name:"Clave de Fá", hint:"Mão esquerda, do Dó central para baixo", low:36, high:60},
   grand:{name:"Pauta dupla", hint:"As duas mãos, ao redor do Dó central", low:48, high:72},
 };
-const ROUND = 20;
 const LETTERS = ["c","d","e","f","g","a","b"];
 const SEMI = {c:0,d:2,e:4,f:5,g:7,a:9,b:11};
 const SOLF = {c:"Dó",d:"Ré",e:"Mi",f:"Fá",g:"Sol",a:"Lá",b:"Si"};
 const PC_NAMES = ["c","c#","d","d#","e","f","f#","g","g#","a","a#","b"];
+const PC_FLAT = {1:"db",3:"eb",6:"gb",8:"ab",10:"bb"};
+const ACC_SYM = {"#":"♯", "b":"♭", "":""};
 
 const pk = k => k.split("@")[0];
 const onBass = k => k.endsWith("@b");
-const keyToMidi = k => { const [l,o] = pk(k).split("/"); return (parseInt(o,10)+1)*12 + SEMI[l]; };
-const midiToKey = m => { const pc = PC_NAMES[m%12]; return pc + "/" + (Math.floor(m/12)-1); };
+const splitKey = k => { const [n,o] = pk(k).split("/"); return {l:n[0], acc:n.slice(1), o:parseInt(o,10)}; };
+const keyToMidi = k => { const {l,acc,o} = splitKey(k); return (o+1)*12 + SEMI[l] + (acc==="#"?1:acc==="b"?-1:0); };
+const itemKeys = item => { const tag = item.includes("@") ? "@"+item.split("@")[1] : ""; return pk(item).split(",").map(k => k+tag); };
+const itemMidis = item => itemKeys(item).map(keyToMidi);
+const midiToKey = m => PC_NAMES[m%12] + "/" + (Math.floor(m/12)-1);
 const fmt1 = x => x.toLocaleString("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1});
 const isBlack = m => [1,3,6,8,10].includes(m%12);
 
 /* ---------------- state & storage ---------------- */
 const defaults = {names:"solfege", input:"piano", octave:true, sound:true, showName:true};
-let saved = {best:{}, settings:{...defaults}, level:{}};
-try { const raw = localStorage.getItem(STORE_KEY); if (raw) { const p = JSON.parse(raw); saved = {best:p.best||{}, settings:{...defaults, ...(p.settings||{})}, level:p.level||{}}; } } catch(e) {}
-saved.level = saved.level || {};
-// v1 scores were the "medium" note set
+let saved = {best:{}, settings:{...defaults}, level:{}, mode:"round"};
+try { const raw = localStorage.getItem(STORE_KEY); if (raw) { const p = JSON.parse(raw);
+  saved = {best:p.best||{}, settings:{...defaults, ...(p.settings||{})}, level:p.level||{}, mode:p.mode||"round"}; } } catch(e) {}
 Object.keys(saved.best).forEach(k => { if (!k.includes(":")) { saved.best[k+":medium"] = saved.best[k+":medium"] || saved.best[k]; delete saved.best[k]; } });
 const persist = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(saved)); } catch(e) {} };
 const S = () => saved.settings;
 
-function noteName(letter, withOctave, octave){
-  const base = S().names === "solfege" ? SOLF[letter] : letter.toUpperCase();
-  return withOctave ? `${base}${octave}` : base;
+const letterName = l => S().names === "solfege" ? SOLF[l] : l.toUpperCase();
+function keyLabel(k, withOct = S().octave){
+  const {l,acc,o} = splitKey(k);
+  const base = letterName(l) + ACC_SYM[acc];
+  return withOct ? `${base} (${l.toUpperCase()}${ACC_SYM[acc]}${o})` : base;
+}
+function pcLabel(pc, flat=false){
+  const n = flat && PC_FLAT[pc] ? PC_FLAT[pc] : PC_NAMES[pc];
+  return letterName(n[0]) + ACC_SYM[n.slice(1)];
 }
 function midiName(m){
-  const pc = PC_NAMES[m%12]; const oct = Math.floor(m/12)-1;
-  const l = pc[0]; const sharp = pc.length>1 ? "♯" : "";
-  const base = (S().names === "solfege" ? SOLF[l] : l.toUpperCase()) + sharp;
-  return `${base} (${l.toUpperCase()}${sharp}${oct})`;
+  const pc = m%12, oct = Math.floor(m/12)-1, n = PC_NAMES[pc];
+  return `${pcLabel(pc)} (${n[0].toUpperCase()}${ACC_SYM[n.slice(1)]}${oct})`;
 }
+function chordLabel(item){
+  const info = CHORD_INFO[pk(item)];
+  if (!info) return itemKeys(item).map(k => keyLabel(k,false)).join(" ");
+  return S().names === "solfege" ? `${SOLF[info.root]} ${info.q==="maj"?"maior":"menor"}` : `${info.root.toUpperCase()}${info.q==="min"?"m":""}`;
+}
+const itemLabel = (d, item) => d.type === "chord" ? chordLabel(item) : keyLabel(item);
 
 /* ---------------- audio: small piano-like synth ---------------- */
 let actx = null;
@@ -252,8 +307,7 @@ function playMidi(m, vel=0.8){
   const f = 440*Math.pow(2,(m-69)/12), t = ac.currentTime;
   const out = ac.createGain(); out.gain.value = 0.0001; out.connect(ac.destination);
   const lp = ac.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value = Math.min(9000, f*9); lp.connect(out);
-  const partials = [[1,1],[2,.42],[3,.2],[4,.11],[5,.06]];
-  partials.forEach(([h,a])=>{ const o = ac.createOscillator(); o.type = "sine"; o.frequency.value = f*h*(1+0.0004*h*h);
+  [[1,1],[2,.42],[3,.2],[4,.11],[5,.06]].forEach(([hh,a])=>{ const o = ac.createOscillator(); o.type = "sine"; o.frequency.value = f*hh*(1+0.0004*hh*hh);
     const g = ac.createGain(); g.gain.value = a; o.connect(g); g.connect(lp); o.start(t); o.stop(t+2.6); });
   const peak = 0.28*vel;
   out.gain.setValueAtTime(0.0001,t); out.gain.exponentialRampToValueAtTime(peak,t+0.006);
@@ -265,7 +319,7 @@ function playBuzz(){ if (!S().sound) return; const ac = audio(); if (!ac) return
 
 /* ---------------- MIDI ---------------- */
 const midi = {status:"checking", names:[], access:null};
-let midiListener = null;     // current screen's handler
+let midiListener = null, midiOffListener = null;
 function bindInputs(){
   if (!midi.access) return;
   midi.names = [];
@@ -276,13 +330,12 @@ function bindInputs(){
 function onMidiMessage(e){
   const [st, note, vel] = e.data; const cmd = st & 0xF0;
   if (cmd === 0x90 && vel > 0) { flashChip(); if (midiListener) midiListener(note, "midi"); }
+  else if (cmd === 0x80 || (cmd === 0x90 && vel === 0)) { if (midiOffListener) midiOffListener(note); }
 }
 async function initMidi(){
   if (!navigator.requestMIDIAccess) { midi.status = "unsupported"; updateChip(); return; }
-  try {
-    midi.access = await navigator.requestMIDIAccess({sysex:false});
-    midi.access.onstatechange = bindInputs; bindInputs();
-  } catch(e) { midi.status = "denied"; updateChip(); }
+  try { midi.access = await navigator.requestMIDIAccess({sysex:false}); midi.access.onstatechange = bindInputs; bindInputs(); }
+  catch(e) { midi.status = "denied"; updateChip(); }
 }
 function chipText(){
   switch (midi.status){
@@ -301,13 +354,31 @@ function flashChip(){ document.querySelectorAll(".midichip").forEach(c=>c.classL
 /* ---------------- notation (VexFlow) ---------------- */
 const VF = window.Vex && Vex.Flow;
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-function drawStaff(el, clef, keys, opts={}){
-  if (clef === "grand") return drawGrand(el, keys, opts);
-  keys = keys.map(pk);
+function makeNote(item, clef, col){
+  const ks = pk(item).split(",");
+  const n = new VF.StaveNote({keys:ks, duration:"w", clef});
+  ks.forEach((k,i) => { const {acc} = splitKey(k); if (acc) n.addModifier(new VF.Accidental(acc), i); });
+  n.setStyle({fillStyle: col, strokeStyle: col}); n.setLedgerLineStyle({strokeStyle: col, fillStyle: col});
+  return n;
+}
+function bandBehind(el, ctx, color, x, y, w, hh){
+  ctx.save(); ctx.setFillStyle(color); ctx.fillRect(x, y, w, hh); ctx.restore();
+  const svg = el.querySelector("svg"); if (!svg) return;
+  const rects = svg.querySelectorAll("rect"); const band = rects[rects.length-1];
+  if (band) { band.remove(); svg.insertBefore(band, svg.firstChild); }
+}
+function finishSvg(el, width, label){
+  const svg = el.querySelector("svg");
+  if (svg) { svg.removeAttribute("width"); svg.removeAttribute("height");
+    svg.style.width = width+"px"; svg.style.maxWidth="100%"; svg.style.height="auto"; svg.setAttribute("role","img"); svg.setAttribute("aria-label",label); }
+}
+const voiceOf = notes => new VF.Voice({num_beats: Math.max(1,notes.length)*4, beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+function drawStaff(el, clef, items, opts={}){
+  if (clef === "grand") return drawGrand(el, items, opts);
   el.innerHTML = "";
   if (!VF) { el.textContent = "Não foi possível carregar a pauta. Verifique a internet e recarregue."; return null; }
   const {width=700, scale=1.6, current=-1, states=[], ghost=null, mini=false} = opts;
-  const ink = css("--ink"), muted = css("--muted"), accent = css("--accent"), ok = css("--ok"), bad = css("--bad"), soft = css("--accent-soft");
+  const ink = css("--ink"), muted = css("--muted"), ok = css("--ok"), bad = css("--bad"), soft = css("--accent-soft");
   const innerW = width/scale;
   const r = new VF.Renderer(el, VF.Renderer.Backends.SVG);
   const h = mini ? 44 : Math.round(112*scale);
@@ -316,65 +387,31 @@ function drawStaff(el, clef, keys, opts={}){
   const y = mini ? 20 : 32;
   const stave = new VF.Stave(2, y, innerW-6, {space_above_staff_ln:0});
   if (!mini) stave.addClef(clef);
-  stave.setContext(ctx);
-  stave.setStyle({strokeStyle: muted, fillStyle: ink});
-  const notes = keys.map((k,i) => {
-    const n = new VF.StaveNote({keys:[k], duration:"w", clef, align_center:false});
-    let col = muted;
-    if (i === current) col = ink;
-    if (states[i] === "ok") col = ok;
-    if (states[i] === "bad") col = bad;
-    n.setStyle({fillStyle: col, strokeStyle: col});
-    n.setLedgerLineStyle({strokeStyle: col, fillStyle: col});
-    return n;
-  });
-  const voice = new VF.Voice({num_beats: Math.max(1,notes.length)*4, beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
-  const voices = [voice];
-  let gnotes = null;
-  if (ghost && current >= 0) {
-    gnotes = keys.map((k,i) => {
-      if (i !== current) return new VF.GhostNote({duration:"w"});
-      const gn = new VF.StaveNote({keys:[ghost], duration:"w", clef});
-      if (ghost.includes("#")) gn.addModifier(new VF.Accidental("#"), 0);
-      gn.setStyle({fillStyle: bad, strokeStyle: bad}); gn.setLedgerLineStyle({strokeStyle: bad});
-      return gn;
-    });
-    voices.push(new VF.Voice({num_beats: Math.max(1,notes.length)*4, beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(gnotes));
-  }
-  const fmt = new VF.Formatter();
-  fmt.joinVoices(voices);
-  const startX = stave.getNoteStartX();
-  fmt.format(voices, stave.getX()+stave.getWidth()-startX-(mini?6:24));
-  voices.forEach(v => { v.setStave(stave); });
-  voice.preFormat && voice.preFormat();
-  // highlight band behind the current note
+  stave.setContext(ctx); stave.setStyle({strokeStyle: muted, fillStyle: ink});
+  const colorFor = i => states[i]==="ok" ? ok : states[i]==="bad" ? bad : i===current ? ink : muted;
+  const notes = items.map((it,i) => makeNote(it, clef, colorFor(i)));
+  const voices = [voiceOf(notes)];
+  if (ghost && current >= 0) voices.push(voiceOf(items.map((k,i) => i !== current ? new VF.GhostNote({duration:"w"}) : makeNote(ghost, clef, bad))));
+  const fmt = new VF.Formatter(); fmt.joinVoices(voices);
+  fmt.format(voices, stave.getX()+stave.getWidth()-stave.getNoteStartX()-(mini?6:24));
+  voices.forEach(v => v.setStave(stave));
   ctx.setFillStyle(ink); ctx.setStrokeStyle(muted);
-  stave.draw();
-  voices.forEach(v => v.draw(ctx, stave));
+  stave.draw(); voices.forEach(v => v.draw(ctx, stave));
   if (current >= 0 && !mini) {
     const nx = notes[current].getAbsoluteX(), nw = notes[current].getGlyphWidth ? notes[current].getGlyphWidth() : 14;
-    bandBehind(el, ctx, soft, nx-12, y-26, nw+24, 40+52);
+    bandBehind(el, ctx, soft, nx-22, y-26, nw+34, 40+52);
   }
-  const svg = el.querySelector("svg");
-  if (svg) { svg.removeAttribute("width"); svg.removeAttribute("height");
-    svg.style.width = width+"px"; svg.style.maxWidth="100%"; svg.style.height="auto"; svg.setAttribute("role","img"); svg.setAttribute("aria-label","Pauta"); }
+  finishSvg(el, width, "Pauta");
   return {notes, stave};
 }
-
-function bandBehind(el, ctx, color, x, y, w, hh){
-  ctx.save(); ctx.setFillStyle(color); ctx.fillRect(x, y, w, hh); ctx.restore();
-  const svg = el.querySelector("svg"); if (!svg) return;
-  const rects = svg.querySelectorAll("rect"); const band = rects[rects.length-1];
-  if (band) { band.remove(); svg.insertBefore(band, svg.firstChild); }
-}
-function drawGrand(el, keys, opts={}){
+function drawGrand(el, items, opts={}){
   el.innerHTML = "";
   if (!VF) { el.textContent = "Não foi possível carregar a pauta. Verifique a internet e recarregue."; return null; }
   const {width=700, scale=1.6, current=-1, states=[], ghost=null} = opts;
   const ink = css("--ink"), muted = css("--muted"), ok = css("--ok"), bad = css("--bad"), soft = css("--accent-soft");
   const innerW = width/scale, H = 196;
   const r = new VF.Renderer(el, VF.Renderer.Backends.SVG);
-  const h = Math.round(H*scale); r.resize(width, h);
+  r.resize(width, Math.round(H*scale));
   const ctx = r.getContext(); ctx.scale(scale, scale);
   const yT = 26, yB = 116, x0 = 16;
   const top = new VF.Stave(x0, yT, innerW-x0-4, {space_above_staff_ln:0}).addClef("treble");
@@ -383,25 +420,12 @@ function drawGrand(el, keys, opts={}){
   try { VF.Stave.formatBegModifiers([top, bot]); } catch(e) {}
   const startX = Math.max(top.getNoteStartX(), bot.getNoteStartX()); top.setNoteStartX(startX); bot.setNoteStartX(startX);
   const colorFor = i => states[i]==="ok" ? ok : states[i]==="bad" ? bad : i===current ? ink : muted;
-  const mk = (staff) => keys.map((k,i) => {
-    if ((onBass(k) ? "b" : "t") !== staff) return new VF.GhostNote({duration:"w"});
-    const n = new VF.StaveNote({keys:[pk(k)], duration:"w", clef: staff==="t" ? "treble" : "bass"});
-    const col = colorFor(i); n.setStyle({fillStyle: col, strokeStyle: col}); n.setLedgerLineStyle({strokeStyle: col, fillStyle: col});
-    return n;
-  });
-  const voiceOf = notes => new VF.Voice({num_beats: Math.max(1,notes.length)*4, beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+  const mk = staff => items.map((k,i) => (onBass(k) ? "b" : "t") !== staff ? new VF.GhostNote({duration:"w"}) : makeNote(k, staff==="t"?"treble":"bass", colorFor(i)));
   const tn = mk("t"), bn = mk("b");
-  const tv = voiceOf(tn), bv = voiceOf(bn);
-  const groups = {t:[tv], b:[bv]};
+  const groups = {t:[voiceOf(tn)], b:[voiceOf(bn)]};
   if (ghost && current >= 0) {
-    const staff = onBass(keys[current]) ? "b" : "t";
-    const gn = keys.map((k,i) => {
-      if (i !== current) return new VF.GhostNote({duration:"w"});
-      const n = new VF.StaveNote({keys:[ghost], duration:"w", clef: staff==="t" ? "treble" : "bass"});
-      if (ghost.includes("#")) n.addModifier(new VF.Accidental("#"), 0);
-      n.setStyle({fillStyle: bad, strokeStyle: bad}); n.setLedgerLineStyle({strokeStyle: bad}); return n;
-    });
-    groups[staff].push(voiceOf(gn));
+    const staff = onBass(items[current]) ? "b" : "t";
+    groups[staff].push(voiceOf(items.map((k,i) => i !== current ? new VF.GhostNote({duration:"w"}) : makeNote(ghost, staff==="t"?"treble":"bass", bad))));
   }
   const fmt = new VF.Formatter();
   fmt.joinVoices(groups.t); fmt.joinVoices(groups.b);
@@ -413,13 +437,11 @@ function drawGrand(el, keys, opts={}){
     const c = new VF.StaveConnector(top, bot).setType(t); c.setContext(ctx); c.draw(); });
   groups.t.forEach(v => v.draw(ctx, top)); groups.b.forEach(v => v.draw(ctx, bot));
   if (current >= 0) {
-    const real = (onBass(keys[current]) ? bn : tn)[current];
+    const real = (onBass(items[current]) ? bn : tn)[current];
     const nx = real.getAbsoluteX(), nw = real.getGlyphWidth ? real.getGlyphWidth() : 14;
     bandBehind(el, ctx, soft, nx-12, yT-24, nw+24, (yB+40+24)-(yT-24));
   }
-  const svg = el.querySelector("svg");
-  if (svg) { svg.removeAttribute("width"); svg.removeAttribute("height");
-    svg.style.width = width+"px"; svg.style.maxWidth="100%"; svg.style.height="auto"; svg.setAttribute("role","img"); svg.setAttribute("aria-label","Pauta dupla"); }
+  finishSvg(el, width, "Pauta dupla");
   return {};
 }
 
@@ -432,33 +454,37 @@ const GEAR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-
 const BACK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>`;
 const LOGO = `<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="9" fill="var(--accent)"/><g stroke="var(--on-accent)" stroke-width="1.3" opacity=".75"><path d="M6 10h20M6 14h20M6 18h20M6 22h20"/></g><ellipse cx="17" cy="16" rx="4.2" ry="3" transform="rotate(-20 17 16)" fill="var(--on-accent)"/></svg>`;
 const midiChip = () => `<span class="chip midichip ${midi.status==="on"?"on":""}" role="status"><i class="dot"></i><span>${chipText()}</span></span>`;
+const clock = s => `${Math.floor(s/60)}:${String(Math.max(0,Math.floor(s%60))).padStart(2,"0")}`;
 
 let screenCleanup = null;
-function mount(node){ if (screenCleanup) { screenCleanup(); screenCleanup = null; } midiListener = null; const app = $("#app"); app.innerHTML=""; app.appendChild(node); }
+function mount(node){ if (screenCleanup) { screenCleanup(); screenCleanup = null; } midiListener = null; midiOffListener = null; const app = $("#app"); app.innerHTML=""; app.appendChild(node); }
 
 /* ---------------- home ---------------- */
-function poolFor(d, level){ return d.levels[level] || d.levels.medium; }
-const bestOf = (d, lv) => saved.best[d.id+":"+lv];
+const poolFor = (d, level) => d.levels[level] || d.levels.medium;
+const bestKey = (d, lv, mode) => d.id+":"+lv+(mode==="time"?":time":"");
+const bestOf = (d, lv, mode="round") => saved.best[bestKey(d,lv,mode)];
 const lastLevel = d => saved.level[d.id] || "medium";
+const hintFor = (d, lv) => LEVEL_HINT[d.type==="chord" ? "chord" : d.acc ? "acc" : "note"][lv];
 function renderHome(){
   const groups = ["treble","bass","grand"].map(c => {
     const items = DRILLS.filter(d=>d.clef===c).map(d => {
       const top = Math.max(0, ...LEVELS.map(([lv]) => (bestOf(d,lv)||{stars:0}).stars));
-      const sub = LEVELS.map(([lv,label]) => { const b = bestOf(d,lv); return `<span>${label} ${b ? b.stars+"★" : "–"}</span>`; }).join(" · ");
-      return `<button class="drill" data-id="${d.id}"><div class="mini" data-mini="${d.id}"></div><div><b>${d.title}</b><span class="sub">${sub}</span></div>${starRow(top)}</button>`;
+      const rec = Math.max(0, ...LEVELS.map(([lv]) => (bestOf(d,lv,"time")||{score:0}).score));
+      const sub = LEVELS.map(([lv,label]) => { const b = bestOf(d,lv); return `<span>${label} ${b ? b.stars+"★" : "–"}</span>`; }).join(" · ")
+        + (rec ? ` · <span>Recorde: ${rec} em ${TIME_LIMIT} s</span>` : "");
+      return `<button class="drill" data-id="${d.id}"><div class="mini" data-mini="${d.id}"></div><div><b>${d.title}${d.isNew?`<span class="tag">novo</span>`:""}</b><span class="sub">${sub}</span></div>${starRow(top)}</button>`;
     }).join("");
     return `<section class="group"><div class="group-head"><div class="clefmark" data-clef="${c}"></div><div><h2>${CLEFS[c].name}</h2><small>${CLEFS[c].hint}</small></div></div>${items}</section>`;
   }).join("");
   const node = h(`<div class="screen home">
     <header class="top"><div class="brand">${LOGO}Pauta Viva</div><div class="spacer"></div>${midiChip()}<button class="iconbtn" id="gear" aria-label="Ajustes">${GEAR}</button></header>
-    <div class="intro"><h1>Leia a nota, toque a tecla</h1><p>Escolha um exercício. Cada rodada tem ${ROUND} notas; responda pelo seu piano (MIDI) ou pelo teclado da tela. Ganhe estrelas pela precisão e pela velocidade.</p></div>
+    <div class="intro"><h1>Leia a nota, toque a tecla</h1><p>Escolha um exercício, a dificuldade e o modo: uma rodada de ${ROUND}, valendo estrelas, ou contra o tempo, valendo recorde. Responda pelo seu piano (MIDI) ou pela tela.</p></div>
     <div class="groups">${groups}</div>
     <section class="midi-test"><div><h3>Teste do piano</h3><p>Toque qualquer tecla no seu piano. Se o nome aparecer aqui ao lado, o MIDI está funcionando.</p></div><div class="lastkey" id="lastkey">—</div></section>
   </div>`);
   mount(node);
-  node.querySelectorAll(".drill").forEach(b => b.addEventListener("click", () => { audio(); const d = DRILLS.find(x=>x.id===b.dataset.id); renderDrill(d, lastLevel(d)); }));
+  node.querySelectorAll(".drill").forEach(b => b.addEventListener("click", () => { audio(); const d = DRILLS.find(x=>x.id===b.dataset.id); renderDrill(d, lastLevel(d), saved.mode); }));
   $("#gear", node).addEventListener("click", () => openSettings(renderHome));
-  // clef marks & mini staves
   node.querySelectorAll("[data-clef]").forEach(el => {
     if (!VF) return; const c = el.dataset.clef === "grand" ? "treble" : el.dataset.clef; el.innerHTML="";
     const r = new VF.Renderer(el, VF.Renderer.Backends.SVG); r.resize(46,58); const ctx=r.getContext();
@@ -468,8 +494,9 @@ function renderHome(){
   });
   node.querySelectorAll("[data-mini]").forEach(el => {
     const d = DRILLS.find(x=>x.id===el.dataset.mini);
-    const notes = d.levels.medium.filter(k => !onBass(k)).slice(0,5);
-    drawStaff(el, d.clef === "grand" ? "treble" : d.clef, notes, {width:96, scale:0.55, mini:true});
+    const pool = d.levels.medium.filter(k => !onBass(k));
+    const sample = d.type === "chord" ? pool.slice(0,3) : d.acc ? [pool[0], pool[6], pool[3]] : pool.slice(0,5);
+    drawStaff(el, d.clef === "grand" ? "treble" : d.clef, sample, {width:96, scale:0.55, mini:true});
   });
   midiListener = (m) => { const el = $("#lastkey"); if (el) el.textContent = midiName(m); };
 }
@@ -484,7 +511,7 @@ function openSettings(onClose){
     <div class="field"><span class="lbl">Nome das notas</span>${seg("names",[["solfege","Dó Ré Mi"],["letters","C D E"]])}</div>
     <div class="field"><span class="lbl">Responder na tela com</span>${seg("input",[["piano","Teclado"],["names","Botões de nomes"],["none","Só o piano MIDI"]])}<small>O piano MIDI funciona em qualquer opção.</small></div>
     ${tog("octave","Exigir a oitava certa","Vale para o piano e o teclado da tela. Desligado, qualquer Dó serve para um Dó.")}
-    ${tog("showName","Mostrar o nome ao acertar","Mostra o nome da nota depois de cada acerto.")}
+    ${tog("showName","Mostrar o nome ao acertar","Mostra o nome da nota ou do acorde depois de cada acerto.")}
     ${tog("sound","Som do app","Toca a nota pelo iPad. O seu piano já faz o som quando você usa MIDI.")}
     <div class="row"><button class="btn" id="close">Pronto</button></div>
   </div></div>`);
@@ -500,164 +527,268 @@ function openSettings(onClose){
 }
 
 /* ---------------- drill ---------------- */
-function makeSequence(pool, n){
-  const seq = []; let prev = null;
+function extendSequence(seq, pool, n){
+  let prev = seq.length ? seq[seq.length-1] : null;
   for (let i=0;i<n;i++){ let k; do { k = pool[Math.floor(Math.random()*pool.length)]; } while (pool.length>1 && k===prev); seq.push(k); prev = k; }
   return seq;
 }
-function renderDrill(d, level="medium"){
-  saved.level[d.id] = level; persist();
+function renderDrill(d, level="medium", mode="round"){
+  saved.level[d.id] = level; saved.mode = mode; persist();
+  const timed = mode === "time", isChord = d.type === "chord";
   const pool = poolFor(d, level);
   const levelLabel = LEVELS.find(x=>x[0]===level)[1];
-  const seq = makeSequence(pool, ROUND);
-  const st = {i:0, started:false, done:false, firstTry:Array(ROUND).fill(true), times:[], noteStart:0, t0:0, misses:{}, ghost:null, last:null, lock:false};
+  const seq = extendSequence([], pool, timed ? 30 : ROUND);
+  const st = {i:0, started:false, done:false, missed:new Set(), times:[], noteStart:0, t0:0, misses:{}, ghost:null};
+  const unit = isChord ? "acordes" : "notas";
+  const levelBtn = ([lv,label]) => { const b = bestOf(d,lv,mode); const extra = b ? (timed ? ` · ${b.score}` : ` · ${b.stars}★`) : "";
+    return `<button type="button" data-lv="${lv}" aria-pressed="${lv===level}">${label}${extra}</button>`; };
+  const sortedPool = [...pool].sort((a,b) => (onBass(a)-onBass(b)) || (onBass(a) ? itemMidis(b)[0]-itemMidis(a)[0] : itemMidis(a)[0]-itemMidis(b)[0]));
   const node = h(`<div class="screen">
     <header class="drillbar"><button class="iconbtn" id="back" aria-label="Voltar">${BACK}</button><h2>${CLEFS[d.clef].name} · ${d.title} · ${levelLabel}</h2><div class="spacer"></div>
-      <span class="stat" id="count">0/${ROUND}</span><span class="stat" id="clock">0:00</span>${midiChip()}</header>
-    <div class="bar"><i id="prog"></i></div>
+      <span class="stat" id="count"></span><span class="stat" id="clock">${timed ? clock(TIME_LIMIT) : "0:00"}</span>${midiChip()}</header>
+    <div class="bar ${timed?"timer":""}"><i id="prog" style="width:${timed?100:0}%"></i></div>
     <div class="desk"><div id="staff"></div><div class="feedback info" id="fb"></div>
-      <div class="startcard" id="start"><div><h2 style="margin:0;font-family:var(--font-display);font-weight:400">${d.title}</h2>
-      <div class="seg levelseg" role="group" aria-label="Dificuldade">${LEVELS.map(([lv,label])=>{ const b=bestOf(d,lv); return `<button type="button" data-lv="${lv}" aria-pressed="${lv===level}">${label}${b?` · ${b.stars}★`:""}</button>`; }).join("")}</div>
-      <p>${LEVEL_HINT[level]} ${pool.length} notas diferentes:</p>
-      <div class="preview" id="preview"></div>
-      <button class="btn" id="go">Começar</button>
-      <p style="font-size:.85rem">${ROUND} notas por rodada · ${S().octave?"oitava exata":"qualquer oitava"} · você também pode começar tocando uma tecla do piano</p></div></div></div>
+      <div class="startcard" id="start"><div>
+        <h2>${d.title}</h2>
+        <div class="seg levelseg" role="group" aria-label="Dificuldade">${LEVELS.map(levelBtn).join("")}</div>
+        <div class="seg modeseg" role="group" aria-label="Modo">${MODES.map(([m,label]) => `<button type="button" data-mode="${m}" aria-pressed="${m===mode}">${label}</button>`).join("")}</div>
+        <p>${hintFor(d, level)} ${pool.length} ${isChord ? "acordes diferentes" : "notas diferentes"}:</p>
+        <div class="preview" id="preview"></div>
+        <button class="btn" id="go">Começar</button>
+        <p style="font-size:.85rem">${timed ? `Acerte o máximo de ${unit} em ${TIME_LIMIT} segundos.` : `${ROUND} ${unit} por rodada.`}${isChord ? " Toque as três notas juntas." : ""} ${S().octave?"Oitava exata.":"Qualquer oitava."}</p>
+      </div></div></div>
     <div class="kbwrap" id="kbwrap"></div>
   </div>`);
   mount(node);
   const staffEl = $("#staff", node), fb = $("#fb", node);
-  const WINDOW = 6;
-  function layoutWidth(){ return Math.min(staffEl.clientWidth || 700, 1000); }
+  const WINDOW = isChord ? 5 : 6;
+  const layoutWidth = () => Math.min(staffEl.clientWidth || 700, 1000);
   function render(slide=false){
     const start = Math.max(0, st.i-1);
-    const keys = seq.slice(start, start+WINDOW);
-    const states = keys.map((_,j) => { const idx = start+j; if (idx < st.i) return st.firstTry[idx] ? "ok" : "bad"; return ""; });
+    const items = seq.slice(start, start+WINDOW);
+    const states = items.map((_,j) => { const idx = start+j; if (idx < st.i) return st.missed.has(idx) ? "bad" : "ok"; return ""; });
     const w = layoutWidth();
     const sc = w < 520 ? 1.15 : w < 800 ? 1.45 : 1.75;
-    drawStaff(staffEl, d.clef, keys, {width:w, scale:sc, current: st.done ? -1 : st.i-start, states, ghost: st.ghost});
+    drawStaff(staffEl, d.clef, items, {width:w, scale:sc, current: st.done ? -1 : st.i-start, states, ghost: st.ghost});
     if (slide) { staffEl.classList.remove("slide"); void staffEl.offsetWidth; staffEl.style.setProperty("--slide", Math.round(w/WINDOW*0.6)+"px"); staffEl.classList.add("slide"); }
   }
-  // keyboard
+  /* ---- input surfaces ---- */
   const kbwrap = $("#kbwrap", node);
-  const keyEls = {};
+  const keyEls = {}, padEls = {};
+  const selection = new Set();          // a chord being built on screen: midi numbers (keyboard) or pitch classes (name pad)
   function buildKeyboard(){
     kbwrap.innerHTML = ""; kbwrap.hidden = S().input === "none";
     if (S().input === "names") {
-      const pad = h(`<div class="namepad">${LETTERS.map(l=>`<button data-l="${l}">${noteName(l)}</button>`).join("")}</div>`);
-      pad.addEventListener("pointerdown", e => { const b = e.target.closest("button"); if (!b) return; e.preventDefault(); answerLetter(b.dataset.l, b); });
+      const twelve = isChord || d.acc;
+      const pad = h(`<div class="namepad ${twelve?"":"seven"}" role="group" aria-label="Nomes das notas"></div>`);
+      if (twelve) [[1,2],[3,4],[6,8],[8,10],[10,12]].forEach(([pc,col]) => {
+        const b = h(`<button class="blk" data-pc="${pc}" style="grid-column:${col}/span 2;grid-row:1">${pcLabel(pc)}<br>${pcLabel(pc,true)}</button>`); pad.appendChild(b); padEls[pc]=b; });
+      LETTERS.forEach((l,i) => { const pc = SEMI[l];
+        const b = h(`<button data-pc="${pc}" ${twelve?`style="grid-column:${i*2+1}/span 2;grid-row:2"`:""}>${letterName(l)}</button>`); pad.appendChild(b); padEls[pc]=b; });
+      pad.addEventListener("pointerdown", e => { const b = e.target.closest("button"); if (!b) return; e.preventDefault(); answerPc(+b.dataset.pc, b); });
       kbwrap.appendChild(pad); return;
     }
-    const {low, high} = CLEFS[d.clef];
+    const mids = pool.flatMap(itemMidis);
+    let low = Math.min(CLEFS[d.clef].low, ...mids), high = Math.max(CLEFS[d.clef].high, ...mids);
+    while (low % 12 !== 0) low--; while (isBlack(high)) high++;
     const kb = h(`<div class="kb" role="group" aria-label="Teclado"></div>`);
     const whites = []; for (let m=low; m<=high; m++) if (!isBlack(m)) whites.push(m);
-    whites.forEach(m => {
-      const k = h(`<div class="wk" data-m="${m}"></div>`); kb.appendChild(k); keyEls[m]=k; });
+    whites.forEach(m => { const k = h(`<div class="wk" data-m="${m}"></div>`); kb.appendChild(k); keyEls[m]=k; });
     const ww = 100/whites.length;
     whites.forEach((m,i) => { if (m+1<=high && isBlack(m+1)) { const b = h(`<div class="bk" data-m="${m+1}"></div>`); b.style.left = `calc(${(i+1)*ww}% - ${ww*0.3}%)`; b.style.width = `${ww*0.6}%`; kb.appendChild(b); keyEls[m+1]=b; } });
     kb.addEventListener("pointerdown", e => { const k = e.target.closest("[data-m]"); if (!k) return; e.preventDefault(); const m = +k.dataset.m;
-      k.classList.add("down"); setTimeout(()=>k.classList.remove("down"),140); handleMidi(m, "screen"); });
+      if (!isChord) { k.classList.add("down"); setTimeout(()=>k.classList.remove("down"),140); }
+      onKey(m, "screen"); });
     kbwrap.appendChild(kb);
   }
-  function flashKey(m, cls){ const k = keyEls[m]; if (!k) return; k.classList.remove("okflash","badflash"); void k.offsetWidth; k.classList.add(cls); setTimeout(()=>k.classList.remove(cls), 380); }
-  // timing
-  let raf = 0;
-  function tick(){ if (!st.started || st.done) return; const s = Math.floor((performance.now()-st.t0)/1000); $("#clock").textContent = `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`; raf = requestAnimationFrame(tick); }
-  let wake = null;
+  const flashEl = (el, cls) => { if (!el) return; el.classList.remove("okflash","badflash"); void el.offsetWidth; el.classList.add(cls); setTimeout(()=>el.classList.remove(cls), 380); };
+  const clearSelection = () => { selection.clear(); kbwrap.querySelectorAll(".sel").forEach(x => x.classList.remove("sel")); };
+  /* ---- timing ---- */
+  let raf = 0, wake = null;
+  function tick(){
+    if (!st.started || st.done) return;
+    const el = (performance.now()-st.t0)/1000;
+    if (timed) { const left = Math.max(0, TIME_LIMIT - el); $("#clock").textContent = clock(Math.ceil(left)); $("#prog").style.width = (left/TIME_LIMIT*100)+"%";
+      $("#clock").classList.toggle("hot", left <= 10); if (left <= 0) { finish(); return; } }
+    else $("#clock").textContent = clock(el);
+    raf = requestAnimationFrame(tick);
+  }
   async function begin(){
     if (st.started) return; st.started = true; audio();
     $("#start", node).remove(); st.t0 = st.noteStart = performance.now(); tick(); render();
-    fb.className = "feedback info"; fb.textContent = "Toque a nota destacada.";
+    fb.className = "feedback info"; fb.textContent = isChord ? "Toque o acorde destacado." : "Toque a nota destacada.";
     try { wake = await navigator.wakeLock?.request("screen"); } catch(e) {}
   }
-  function updateProgress(){ $("#count").textContent = `${st.i}/${ROUND}`; $("#prog").style.width = (st.i/ROUND*100)+"%"; }
-  function correct(viaLetter){
-    const target = seq[st.i]; const m = keyToMidi(target);
+  function updateProgress(){
+    if (timed) $("#count").textContent = `${st.i} ${st.i===1?"ponto":"pontos"}`;
+    else { $("#count").textContent = `${st.i}/${ROUND}`; $("#prog").style.width = (st.i/ROUND*100)+"%"; }
+  }
+  function correct(src){
+    const target = seq[st.i];
     st.times.push((performance.now()-st.noteStart)/1000);
-    if (viaLetter !== "midi") playMidi(m);
-    const [l, o] = pk(target).split("/");
-    fb.className = "feedback ok"; fb.textContent = S().showName ? `Certo! ${noteName(l)}${S().octave?` (${l.toUpperCase()}${o})`:""}` : "Certo!";
+    if (src !== "midi") itemMidis(target).forEach((m,i) => setTimeout(() => playMidi(m), isChord ? i*25 : 0));
+    fb.className = "feedback ok"; fb.textContent = S().showName ? `Certo! ${itemLabel(d, target)}` : "Certo!";
     st.ghost = null; st.i++; updateProgress();
-    if (st.i >= ROUND) { finish(); return; }
+    if (!timed && st.i >= ROUND) { finish(); return; }
+    if (timed && st.i > seq.length - 8) extendSequence(seq, pool, 20);
     st.noteStart = performance.now(); render(true);
   }
   function wrong(playedLabel, ghostKey){
     const target = seq[st.i];
-    if (st.firstTry[st.i]) { st.firstTry[st.i] = false; st.misses[target] = (st.misses[target]||0)+1; }
+    if (!st.missed.has(st.i)) { st.missed.add(st.i); st.misses[target] = (st.misses[target]||0)+1; }
     st.ghost = ghostKey; playBuzz();
     fb.className = "feedback bad"; fb.textContent = `Você tocou ${playedLabel}. Tente de novo.`;
     render(); staffEl.classList.remove("shake"); void staffEl.offsetWidth; staffEl.classList.add("shake");
   }
-  function handleMidi(m, src){
-    if (src === "midi" && keyEls[m]) { keyEls[m].classList.add("down"); setTimeout(()=>keyEls[m] && keyEls[m].classList.remove("down"),140); }
-    if (!st.started) { if (src==="screen") playMidi(m); begin(); return; }
-    if (st.done) return;
+  const nearPitch = (pc, ref) => { let m = ref - (ref%12) + pc; if (m-ref>6) m-=12; if (ref-m>6) m+=12; return m; };
+  const staffTag = () => onBass(seq[st.i]) ? "@b" : (d.clef === "grand" ? "@t" : "");
+  /* single notes */
+  function judgeNote(m, src){
     const target = keyToMidi(seq[st.i]);
     const okay = S().octave ? m === target : (m%12) === (target%12);
-    if (okay) { flashKey(m,"okflash"); correct(src); }
-    else {
-      if (src === "screen") playMidi(m);
-      flashKey(m,"badflash");
-      // ghost: place the played pitch on the staff (pitch class moved near the target when octave doesn't matter)
-      let gm = m; if (!S().octave) { gm = target - (target%12) + (m%12); if (gm - target > 6) gm -= 12; if (target - gm > 6) gm += 12; }
-      const showable = gm >= CLEFS[d.clef].low - 5 && gm <= CLEFS[d.clef].high + 5;
-      wrong(midiName(m).replace(/ \(.*/, "") + (S().octave ? midiName(m).match(/ \(.*/)[0] : ""), showable ? midiToKey(gm) : null);
+    if (okay) { flashEl(keyEls[m],"okflash"); correct(src); return; }
+    if (src === "screen") playMidi(m);
+    flashEl(keyEls[m],"badflash");
+    const gm = S().octave ? m : nearPitch(m%12, target);
+    const ghost = Math.abs(gm - target) <= 14 ? midiToKey(gm) + staffTag() : null;
+    wrong(S().octave ? midiName(m) : pcLabel(m%12), ghost);
+  }
+  /* chords */
+  const held = new Set(); let attemptReported = false;
+  function chordMatches(notes){
+    const target = itemMidis(seq[st.i]);
+    if (S().octave) return notes.length === target.length && target.every(t => notes.includes(t));
+    const a = new Set(notes.map(n=>n%12)), b = new Set(target.map(n=>n%12));
+    return a.size === b.size && [...b].every(x => a.has(x));
+  }
+  function judgeChord(notes, src){
+    const need = itemMidis(seq[st.i]).length;
+    if (notes.length < need) return;
+    if (chordMatches(notes)) { notes.forEach(m => flashEl(keyEls[m], "okflash")); attemptReported = true; correct(src); return; }
+    if (!attemptReported) {
+      attemptReported = true;
+      notes.forEach(m => flashEl(keyEls[m], "badflash"));
+      wrong([...notes].sort((a,b)=>a-b).map(m => pcLabel(m%12)).join(", "), null);
     }
   }
-  function answerLetter(l, btn){
+  function onKey(m, src){
+    if (src === "midi" && keyEls[m] && !isChord) { keyEls[m].classList.add("down"); setTimeout(()=>keyEls[m] && keyEls[m].classList.remove("down"),140); }
+    if (!st.started) { if (src==="screen") playMidi(m); begin(); return; }
+    if (st.done) return;
+    if (!isChord) { judgeNote(m, src); return; }
+    if (src === "midi") {
+      held.add(m); if (keyEls[m]) keyEls[m].classList.add("sel");
+      judgeChord([...held], "midi");
+      return;
+    }
+    playMidi(m);
+    if (selection.has(m)) { selection.delete(m); keyEls[m] && keyEls[m].classList.remove("sel"); return; }
+    selection.add(m); keyEls[m] && keyEls[m].classList.add("sel");
+    if (selection.size >= itemMidis(seq[st.i]).length) {
+      const notes = [...selection];
+      setTimeout(() => { attemptReported = false; judgeChord(notes, "screen"); clearSelection(); attemptReported = false; }, 140);
+    }
+  }
+  function onKeyUp(m){
+    held.delete(m); if (keyEls[m]) keyEls[m].classList.remove("sel");
+    if (held.size === 0) attemptReported = false;
+  }
+  function answerPc(pc, btn){
     if (!st.started) { begin(); return; }
     if (st.done) return;
-    const target = seq[st.i];
-    const flash = cls => { btn.classList.remove("okflash","badflash"); void btn.offsetWidth; btn.classList.add(cls); setTimeout(()=>btn.classList.remove(cls),380); };
-    if (pk(target)[0] === l) { flash("okflash"); correct("names"); }
-    else { flash("badflash"); const tm = keyToMidi(target); let gm = tm - (tm%12) + SEMI[l]; if (gm-tm>6) gm-=12; if (tm-gm>6) gm+=12; wrong(noteName(l), midiToKey(gm)); }
+    const target = seq[st.i], tm = itemMidis(target);
+    if (!isChord) {
+      if (tm[0] % 12 === pc) { flashEl(btn,"okflash"); correct("names"); }
+      else { flashEl(btn,"badflash"); wrong(pcLabel(pc), midiToKey(nearPitch(pc, tm[0])) + staffTag()); }
+      return;
+    }
+    if (selection.has(pc)) { selection.delete(pc); btn.classList.remove("sel"); return; }
+    selection.add(pc); btn.classList.add("sel");
+    if (selection.size >= tm.length) {
+      const pcs = [...selection]; const want = new Set(tm.map(x=>x%12));
+      setTimeout(() => {
+        if (pcs.length === want.size && pcs.every(p => want.has(p))) { pcs.forEach(p => flashEl(padEls[p],"okflash")); correct("names"); }
+        else { pcs.forEach(p => flashEl(padEls[p],"badflash")); wrong(pcs.map(p => pcLabel(p)).join(", "), null); }
+        clearSelection();
+      }, 140);
+    }
   }
   function finish(){
+    if (st.done) return;
     st.done = true; cancelAnimationFrame(raf); try { wake && wake.release(); } catch(e) {}
-    const acc = st.firstTry.filter(Boolean).length/ROUND;
-    const avg = st.times.reduce((a,b)=>a+b,0)/st.times.length;
-    let stars = 0; if (acc>=0.6) stars=1; if (acc>=0.75) stars=2; if (acc>=0.9) stars=3; if (acc>=0.95 && avg<=2.0) stars=4; if (acc===1 && avg<=1.2) stars=5;
-    const bk = d.id+":"+level; const prev = saved.best[bk]; const isBest = !prev || stars>prev.stars || (stars===prev.stars && (acc>prev.acc || (acc===prev.acc && avg<prev.avg)));
-    if (isBest) { saved.best[bk] = {stars, acc, avg}; persist(); }
-    setTimeout(() => renderResults(d, level, {stars, acc, avg, total:(performance.now()-st.t0)/1000, misses:st.misses, isBest, hadPrev:!!prev}), 450);
+    const answered = st.i;
+    const firstOk = [...Array(answered).keys()].filter(i => !st.missed.has(i)).length;
+    const acc = answered ? firstOk/answered : 0;
+    const avg = st.times.length ? st.times.reduce((a,b)=>a+b,0)/st.times.length : 0;
+    const total = timed ? TIME_LIMIT : (performance.now()-st.t0)/1000;
+    const bk = bestKey(d, level, mode); const prev = saved.best[bk];
+    let result;
+    if (timed) {
+      const isBest = answered > 0 && (!prev || answered > prev.score || (answered === prev.score && acc > prev.acc));
+      if (isBest) { saved.best[bk] = {score: answered, acc}; persist(); }
+      result = {timed, score: answered, acc, avg, misses: st.misses, isBest, prevScore: prev ? prev.score : null};
+    } else {
+      const fast = isChord ? [3.5, 2.2] : [2.0, 1.2];
+      let stars = 0; if (acc>=0.6) stars=1; if (acc>=0.75) stars=2; if (acc>=0.9) stars=3; if (acc>=0.95 && avg<=fast[0]) stars=4; if (acc===1 && avg<=fast[1]) stars=5;
+      const isBest = !prev || stars>prev.stars || (stars===prev.stars && (acc>prev.acc || (acc===prev.acc && avg<prev.avg)));
+      if (isBest) { saved.best[bk] = {stars, acc, avg}; persist(); }
+      result = {timed, stars, acc, avg, total, misses: st.misses, isBest, hadPrev: !!prev, fast};
+    }
+    setTimeout(() => renderResults(d, level, mode, result), timed ? 250 : 450);
   }
-  midiListener = (m) => handleMidi(m, "midi");
+  midiListener = (m) => onKey(m, "midi");
+  midiOffListener = (m) => onKeyUp(m);
   $("#back", node).addEventListener("click", renderHome);
   $("#go", node).addEventListener("click", begin);
-  node.querySelectorAll(".levelseg button").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); if (b.dataset.lv !== level) renderDrill(d, b.dataset.lv); }));
-  const sortedPool = [...pool].sort((a,b) => (onBass(a)-onBass(b)) || (onBass(a) ? keyToMidi(b)-keyToMidi(a) : keyToMidi(a)-keyToMidi(b)));
-  requestAnimationFrame(() => { const pv = $("#preview", node); if (pv) drawStaff(pv, d.clef, sortedPool, {width: Math.min(540, (pv.clientWidth||420)), scale: d.clef==="grand"?0.72:0.95}); });
+  node.querySelectorAll(".levelseg button").forEach(b => b.addEventListener("click", () => { if (b.dataset.lv !== level) renderDrill(d, b.dataset.lv, mode); }));
+  node.querySelectorAll(".modeseg button").forEach(b => b.addEventListener("click", () => { if (b.dataset.mode !== mode) renderDrill(d, level, b.dataset.mode); }));
+  requestAnimationFrame(() => { const pv = $("#preview", node);
+    if (pv) drawStaff(pv, d.clef, sortedPool, {width: Math.min(560, (pv.clientWidth||420)), scale: d.clef==="grand" ? 0.72 : (sortedPool.length > 14 ? 0.78 : 0.95)}); });
   buildKeyboard();
   updateProgress();
-  // first frame: show the staff behind the start card
   requestAnimationFrame(() => render());
-  const onResize = () => render();
+  const onResize = () => { if (st.started) render(); };
   window.addEventListener("resize", onResize);
-  const mq = matchMedia("(prefers-color-scheme: dark)"); const onTheme = () => render(); mq.addEventListener?.("change", onTheme);
+  const mq = matchMedia("(prefers-color-scheme: dark)"); const onTheme = () => { if (st.started) render(); }; mq.addEventListener?.("change", onTheme);
   screenCleanup = () => { cancelAnimationFrame(raf); window.removeEventListener("resize", onResize); mq.removeEventListener?.("change", onTheme); try { wake && wake.release(); } catch(e) {} };
 }
 
 /* ---------------- results ---------------- */
-function renderResults(d, level, r){
+function renderResults(d, level, mode, r){
   const levelLabel = LEVELS.find(x=>x[0]===level)[1];
-  const missed = Object.entries(r.misses).sort((a,b)=>b[1]-a[1]).slice(0,4)
-    .map(([k,c]) => { const [l,o]=pk(k).split("/"); const where = d.clef==="grand" ? (onBass(k)?" na clave de fá":" na clave de sol") : ""; return `${noteName(l)} (${l.toUpperCase()}${o})${where}${c>1?` ${c}×`:""}`; });
-  const titles = ["Continue praticando","Bom começo","Muito bem","Excelente","Quase perfeito","Perfeito!"];
+  const isChord = d.type === "chord", one = isChord ? "acorde" : "nota";
+  const missed = Object.entries(r.misses).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([k,c]) => {
+    const where = d.clef==="grand" ? (onBass(k)?" na clave de fá":" na clave de sol") : "";
+    return `${itemLabel(d, k)}${where}${c>1?` ${c}×`:""}`; });
+  const missedLine = `<p class="missed">${missed.length ? `Para revisar: <b>${missed.join(", ")}</b>` : "Nenhum erro nesta rodada."}</p>`;
+  let core;
+  if (r.timed) {
+    const title = r.isBest && r.prevScore !== null ? "Novo recorde!" : r.isBest ? "Primeiro recorde!" : "Tempo esgotado";
+    core = `<h2>${title}</h2>
+      <div class="bigscore">${r.score}<small>${r.score===1 ? one : one+"s"} em ${TIME_LIMIT} s</small></div>
+      ${r.prevScore !== null && !r.isBest ? `<span style="color:var(--muted)">Seu recorde neste nível: ${r.prevScore}</span>` : ""}
+      <div class="nums"><div><b>${Math.round(r.acc*100)}%</b><span>acertos de primeira</span></div><div><b>${r.avg ? fmt1(r.avg) : "–"} s</b><span>média por ${one}</span></div><div><b>${Object.values(r.misses).reduce((a,b)=>a+b,0)}</b><span>${one}s com erro</span></div></div>
+      ${missedLine}`;
+  } else {
+    const titles = ["Continue praticando","Bom começo","Muito bem","Excelente","Quase perfeito","Perfeito!"];
+    core = `<h2>${titles[r.stars]}</h2>
+      <div class="bigstars">${[1,2,3,4,5].map(i=>`<span class="${i<=r.stars?"f":""}" style="animation-delay:${i*0.09}s">${STAR}</span>`).join("")}</div>
+      ${r.isBest && r.hadPrev ? `<strong style="color:var(--ok)">Novo recorde!</strong>` : ""}
+      <div class="nums"><div><b>${Math.round(r.acc*100)}%</b><span>acertos de primeira</span></div><div><b>${fmt1(r.avg)} s</b><span>média por ${one}</span></div><div><b>${clock(r.total)}</b><span>tempo total</span></div></div>
+      ${missedLine}
+      <p class="rule">Estrelas: 1 com 60% de acertos, 2 com 75%, 3 com 90%, 4 com 95% e até ${fmt1(r.fast[0])} s por ${one}, 5 com 100% e até ${fmt1(r.fast[1])} s.</p>`;
+  }
   const node = h(`<div class="screen">
     <header class="top"><div class="brand">${LOGO}Pauta Viva</div><div class="spacer"></div>${midiChip()}</header>
     <div class="results"><div class="rcard">
-      <span style="color:var(--muted)">${CLEFS[d.clef].name} · ${d.title} · ${levelLabel}</span>
-      <h2>${titles[r.stars]}</h2>
-      <div class="bigstars">${[1,2,3,4,5].map(i=>`<span class="${i<=r.stars?"f":""}" style="animation-delay:${i*0.09}s">${STAR}</span>`).join("")}</div>
-      ${r.isBest && r.hadPrev ? `<strong style="color:var(--ok)">Novo recorde!</strong>` : ""}
-      <div class="nums"><div><b>${Math.round(r.acc*100)}%</b><span>acertos de primeira</span></div><div><b>${fmt1(r.avg)} s</b><span>média por nota</span></div><div><b>${Math.floor(r.total/60)}:${String(Math.floor(r.total%60)).padStart(2,"0")}</b><span>tempo total</span></div></div>
-      <p class="missed">${missed.length ? `Para revisar: <b>${missed.join(", ")}</b>` : "Nenhum erro nesta rodada."}</p>
-      <p class="rule">Estrelas: 1 com 60% de acertos, 2 com 75%, 3 com 90%, 4 com 95% e até 2 s por nota, 5 com 100% e até 1,2 s por nota.</p>
+      <span style="color:var(--muted)">${CLEFS[d.clef].name} · ${d.title} · ${levelLabel}${r.timed ? " · contra o tempo" : ""}</span>
+      ${core}
       <div class="row"><button class="btn" id="again">Repetir</button><button class="btn ghost" id="home">Outros exercícios</button></div>
     </div></div></div>`);
   mount(node);
-  $("#again", node).addEventListener("click", () => renderDrill(d, level));
+  $("#again", node).addEventListener("click", () => renderDrill(d, level, mode));
   $("#home", node).addEventListener("click", renderHome);
-  midiListener = (m) => {}; // ignore stray keys here
+  midiListener = () => {};
 }
 
 renderHome();
